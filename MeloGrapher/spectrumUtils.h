@@ -47,7 +47,7 @@ namespace melo {
 		void resetCursor() {
 			cur = 0;
 		}
-		void Clear() {
+		void ClearData() {
 			data.clear();
 			resetCursor();
 		}

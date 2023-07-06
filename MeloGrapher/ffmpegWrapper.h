@@ -96,17 +96,8 @@ public:
 
 					const AVSampleFormat sampleFormat = static_cast<AVSampleFormat>(frame->format);
 
-					for (int channel = 0; channel < channels; ++channel) {
-						if (sampleFormat != AV_SAMPLE_FMT_FLTP) {
-							//std::cout << "unsupported sampleformat error" << std::endl;
-							break;
-						}
+					get_audiodata(data, samples, sampleFormat, audio);
 
-						for (int sample = 0; sample < samples; ++sample) {
-							const float amplitude = *reinterpret_cast<const float*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
-							audio->data[channel][audio->cur + sample] = (short)(clip((double)amplitude, 1.0) * dMaxSample);
-						}
-					}
 					audio->cur += samples;
 				}
 			}
@@ -119,6 +110,29 @@ public:
 		audio->n_samples = audio->cur;
 
 		return audio;
+	}
+
+	int get_audiodata(uint8_t** data, const int samples, const AVSampleFormat sampleFormat, AudioData* audio) {
+		for (int channel = 0; channel < channels; ++channel) {
+			if (sampleFormat == AV_SAMPLE_FMT_FLTP || sampleFormat == AV_SAMPLE_FMT_FLT) {
+				for (int sample = 0; sample < samples; ++sample) {
+					const float amplitude = *reinterpret_cast<const float*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
+					audio->data[channel][audio->cur + sample] = (short)(clip((double)amplitude, 1.0) * dMaxSample);
+				}
+			}
+			else if (sampleFormat == AV_SAMPLE_FMT_DBLP || sampleFormat == AV_SAMPLE_FMT_DBL) {
+				for (int sample = 0; sample < samples; ++sample) {
+					const double amplitude = *reinterpret_cast<const double*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
+					audio->data[channel][audio->cur + sample] = (short)(clip(amplitude, 1.0) * dMaxSample);
+				}
+			}
+			else {
+				//unsupported format
+				return -1;
+			}
+		}
+
+		return 0;
 	}
 
 	AudioData* decode_mp3(int n_sample) {
@@ -142,17 +156,8 @@ public:
 
 					const AVSampleFormat sampleFormat = static_cast<AVSampleFormat>(frame->format);
 
-					for (int channel = 0; channel < channels; ++channel) {
-						if (sampleFormat != AV_SAMPLE_FMT_FLTP) {
-							//std::cout << "unsupported sampleformat error" << std::endl;
-							break;
-						}
-
-						for (int sample = 0; sample < samples; ++sample) {
-							const float amplitude = *reinterpret_cast<const float*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
-							audio->data[channel][audio->cur + sample] = (short)(clip((double)amplitude, 1.0) * dMaxSample);
-						}
-					}
+					get_audiodata(data, samples, sampleFormat, audio);
+					
 					audio->cur += samples;
 				}
 			}
