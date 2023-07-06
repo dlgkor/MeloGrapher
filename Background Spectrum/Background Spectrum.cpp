@@ -191,11 +191,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
 		SetAttr(hWnd, 255);
 
-		//CreateWindow(TEXT("button"), TEXT("읽어오기"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, middlex, middley - 25, 100, 25, hWnd, (HMENU)ID_B1, g_hInst, NULL);
-		//CreateWindow(TEXT("button"), TEXT("플레이"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, -110 + middlex, 15 + middley, 100, 25, hWnd, (HMENU)ID_B2, g_hInst, NULL);
-		//CreateWindow(TEXT("button"), TEXT("정지"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, middlex, 15 + middley, 100, 25, hWnd, (HMENU)ID_B3, g_hInst, NULL);
-		//CreateWindow(TEXT("button"), TEXT("종료"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, middlex - 60, 40 + middley, 100, 25, hWnd, (HMENU)ID_B4, g_hInst, NULL);
-
 		buffer = new double[MyWavSound.GetBlockSamples()];
 
 		PInfo.Play = false;
