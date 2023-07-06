@@ -1,4 +1,5 @@
-#include<windows.h>
+#include"common.h"
+#include"ffmpegWrapper.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
@@ -35,6 +36,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
+mp3Decoder* mp3decode;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
@@ -42,6 +45,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage) {
 	case WM_CREATE:
 		hWndMain = hWnd;
+
+		mp3decode = new mp3Decoder("C:/Users/ydhan/dlg project/test/ffmpegtest/test.mp3");
+
 		return 0;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
@@ -51,6 +57,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		return 0;
 	case WM_DESTROY:
+		delete mp3decode;
+
 		PostQuitMessage(0);
 		return 0;
 	}
