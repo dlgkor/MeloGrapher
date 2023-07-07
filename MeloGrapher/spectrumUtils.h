@@ -44,6 +44,9 @@ namespace melo {
 		std::vector<SpectrumImage> data;
 		int cur;
 	public:
+		void SpectrumVide() {
+			cur = 0;
+		}
 		void resetCursor() {
 			cur = 0;
 		}

@@ -82,48 +82,30 @@ public:
 		number_of_samples = sampleRate * (duration + 1);
 	}
 
-	AudioData* decode_mp3_all() {
-		AudioData* audio = new AudioData(channels, number_of_samples);
+	int get_audiodata(AVFrame* frame, AudioData* audio) {
+		uint8_t** data = frame->extended_data; //sample data(real audio data) pointer
+		const int samples = frame->nb_samples; //sample per frame. generally 1152
 
-		while (av_read_frame(formatcontext, packet) >= 0) {
-			if (packet->stream_index == ASI) {
-				if (avcodec_send_packet(codecContext, packet)) {
-					//std::cout << "avcodec send packet failed" << std::endl;
-				}
-				while (avcodec_receive_frame(codecContext, frame) >= 0) {
-					uint8_t** data = frame->extended_data; //sample data(real audio data) pointer
-					const int samples = frame->nb_samples; //sample per frame. generally 1152
+		const AVSampleFormat sampleFormat = static_cast<AVSampleFormat>(frame->format);
 
-					const AVSampleFormat sampleFormat = static_cast<AVSampleFormat>(frame->format);
-
-					get_audiodata(data, samples, sampleFormat, audio);
-
-					audio->cur += samples;
-				}
-			}
-
-			av_packet_unref(packet);
-		}
-
-		av_frame_unref(frame);
-
-		audio->n_samples = audio->cur;
-
-		return audio;
-	}
-
-	int get_audiodata(uint8_t** data, const int samples, const AVSampleFormat sampleFormat, AudioData* audio) {
+		//planar audio uses extended_data
 		for (int channel = 0; channel < channels; ++channel) {
-			if (sampleFormat == AV_SAMPLE_FMT_FLTP || sampleFormat == AV_SAMPLE_FMT_FLT) {
+			if (sampleFormat == AV_SAMPLE_FMT_FLTP) {
 				for (int sample = 0; sample < samples; ++sample) {
 					const float amplitude = *reinterpret_cast<const float*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
 					audio->data[channel][audio->cur + sample] = (short)(clip((double)amplitude, 1.0) * dMaxSample);
 				}
 			}
-			else if (sampleFormat == AV_SAMPLE_FMT_DBLP || sampleFormat == AV_SAMPLE_FMT_DBL) {
+			else if (sampleFormat == AV_SAMPLE_FMT_DBLP) {
 				for (int sample = 0; sample < samples; ++sample) {
 					const double amplitude = *reinterpret_cast<const double*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
 					audio->data[channel][audio->cur + sample] = (short)(clip(amplitude, 1.0) * dMaxSample);
+				}
+			}
+			else if (sampleFormat == AV_SAMPLE_FMT_S16P) {
+				for (int sample = 0; sample < samples; ++sample) {
+					const short amplitude = *reinterpret_cast<const short*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
+					audio->data[channel][audio->cur + sample] = amplitude;
 				}
 			}
 			else {
@@ -151,14 +133,9 @@ public:
 					//std::cout << "avcodec send packet failed" << std::endl;
 				}
 				while (avcodec_receive_frame(codecContext, frame) >= 0) {
-					uint8_t** data = frame->extended_data; //sample data(real audio data) pointer
-					const int samples = frame->nb_samples; //sample per frame. generally 1152
-
-					const AVSampleFormat sampleFormat = static_cast<AVSampleFormat>(frame->format);
-
-					get_audiodata(data, samples, sampleFormat, audio);
+					get_audiodata(frame, audio);
 					
-					audio->cur += samples;
+					audio->cur += frame->nb_samples;
 				}
 			}
 
@@ -168,6 +145,31 @@ public:
 		av_frame_unref(frame);
 
 		audio->n_samples = audio->cur; //update number of samples in audiodata
+
+		return audio;
+	}
+
+	AudioData* decode_mp3_all() {
+		AudioData* audio = new AudioData(channels, number_of_samples);
+
+		while (av_read_frame(formatcontext, packet) >= 0) {
+			if (packet->stream_index == ASI) {
+				if (avcodec_send_packet(codecContext, packet)) {
+					//std::cout << "avcodec send packet failed" << std::endl;
+				}
+				while (avcodec_receive_frame(codecContext, frame) >= 0) {
+					get_audiodata(frame, audio);
+
+					audio->cur += frame->nb_samples;
+				}
+			}
+
+			av_packet_unref(packet);
+		}
+
+		av_frame_unref(frame);
+
+		audio->n_samples = audio->cur;
 
 		return audio;
 	}

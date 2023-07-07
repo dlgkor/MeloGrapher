@@ -53,7 +53,7 @@ public:
 		if (m_is_start == 0)
 			m_is_start = 1;
 	}
-	void PrintWave(short* PrintBuffer) {
+	void WriteWaveBuffer(short* PrintBuffer) {
 		int nCurrentBlock = m_nBlockCurrent * m_nBlockSamples; //처리하는 버퍼의 시작점 0, 512, 1024 ...
 		short nNewSample = 0; //샘플 단위버퍼
 

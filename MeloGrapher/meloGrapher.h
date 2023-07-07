@@ -11,7 +11,8 @@ namespace melo {
 	class BufferWrapper {
 	private:
 		AudioData audio_buffer[MAX_MELO_BUFFER];
-		bool audio_filled[8];
+		bool audio_filled[MAX_MELO_BUFFER];
+		std::queue<int> empty_audio_buffer;
 
 		audioCapacitor capacitor;
 
@@ -26,7 +27,7 @@ namespace melo {
 
 		SpectrumOption spectrum_option;
 		SpectrumVideo spectrum_buffer[MAX_MELO_BUFFER];
-		bool spectrum_filled[8];
+		bool spectrum_filled[MAX_MELO_BUFFER];
 
 	public:
 		BufferWrapper(int _channels, int _p_Sample)
@@ -43,6 +44,14 @@ namespace melo {
 			}
 
 			capacitor.InitAudio(channels, 10000);
+
+			for (int i = 0; i < MAX_MELO_BUFFER; i++) {
+				empty_audio_buffer.push(i);
+			}
+		}
+
+		void set_spectrum_option(SpectrumOption _spectrum_option) {
+			spectrum_option = _spectrum_option;
 		}
 
 		AudioData* display_block(int blockSize) {
@@ -84,6 +93,9 @@ namespace melo {
 
 				audio_filled[target_buffer] = false;
 				audio_buffer[target_buffer].cur = 0;
+
+				empty_audio_buffer.push(target_buffer);
+
 				target_buffer = next_target_buffer;
 			}
 			else {
@@ -115,8 +127,11 @@ namespace melo {
 					continue;
 
 				int ref = capacitor.Pull(&audio_buffer[current_target], p_Sample);
-				if (ref == p_Sample)
+				if (ref == p_Sample) {
+					audio_filled[current_target] = true;
+					fill_spectrum_buffer(current_target);
 					continue;
+				}
 				//Pull from capacitor
 
 				int missing_size = p_Sample - ref;
@@ -152,8 +167,70 @@ namespace melo {
 				audio_filled[current_target] = true;
 
 				//activate function check_spectrum continuously
+				// 
 				fill_spectrum_buffer(current_target);
 			}
+		}
+
+		void fill_empty_buffer(mp3Decoder* target_mp3) {
+			/*
+			*fill buffer if buffer is empty
+			*use audioCapacitor in audiobuffer.h
+			*get audioData from mp3decode in ffmpegWrapper.h
+			*I think filled buffer will be 1 second(44100 sample)
+			*/
+			if (empty_audio_buffer.size() == 0) {
+				return;
+			}
+
+			int current_target = empty_audio_buffer.front();
+			empty_audio_buffer.pop();
+
+			if (audio_filled[current_target])
+				return;
+
+			int ref = capacitor.Pull(&audio_buffer[current_target], p_Sample);
+			if (ref == p_Sample) {
+				audio_filled[current_target] = true;
+				fill_spectrum_buffer(current_target);
+				return;
+			}
+			//Pull from capacitor
+
+			int missing_size = p_Sample - ref;
+			AudioData* audio = target_mp3->decode_mp3(missing_size);
+
+			if (audio == nullptr) {
+				end_buffer = current_target;
+				return;
+			}
+
+			for (int channel = 0; channel < channels; channel++) {
+				memcpy_s(&audio_buffer[current_target].data[channel][ref], sizeof(short) * missing_size,
+					&audio->data[channel][0], sizeof(short) * missing_size);
+			}
+
+			//get deficient audio data from mp3 decoder
+			audio_buffer[current_target].resetCursor();
+
+			AudioData remain_audio(channels, 10000);
+			int remain_size = audio->n_samples - missing_size;
+			for (int channel = 0; channel < channels; channel++) {
+				for (int j = 0; j < remain_size; j++) {
+					remain_audio.data[channel][j] = audio->data[channel][missing_size + j];
+				}
+			}
+
+			capacitor.Push(remain_audio, remain_size);
+			//save remaning audio data from mp3 decoder
+
+			delete audio;
+
+			audio_filled[current_target] = true;
+
+			//activate function check_spectrum continuously
+			
+			fill_spectrum_buffer(current_target);
 		}
 
 		static void fill_buffer_wrapper(BufferWrapper* obj, mp3Decoder* target_mp3) {
@@ -161,20 +238,26 @@ namespace melo {
 				if (obj->music_ended())
 					return;
 
-				obj->fill_buffer(target_mp3);
+				obj->fill_empty_buffer(target_mp3);
 			}
 		}
 
-		void fill_spectrum_buffer(int target_buffer) {
+		void fill_spectrum_buffer(int current_target) {
 			// check spectrum form before buffer and current buffer
 			// check untill window right end cross the limit
 
-			int back_buffer = (target_buffer - 1) % MAX_MELO_BUFFER;
-			int b_cur = spectrum_buffer[back_buffer].data.back().s_location;
+			int back_buffer = (current_target - 1 + MAX_MELO_BUFFER) % MAX_MELO_BUFFER;
+
+			int b_cur;
+			if (spectrum_buffer[back_buffer].data.size() != 0)
+				b_cur = spectrum_buffer[back_buffer].data.back().s_location + spectrum_option.s_gap;
+			else
+				b_cur = p_Sample + spectrum_option.s_window_half;
 
 			//complete unfinished back_buffer filling with target_buffer
-			for (int sample = b_cur;; sample += spectrum_option.s_gap) {
-				if (sample > p_Sample)
+			int sample = 0;
+			for (sample = b_cur;; sample += spectrum_option.s_gap) {
+				if (sample - spectrum_option.s_window_half >= p_Sample)
 					break;
 				// FFT
 				// make vector buffer for fft
@@ -182,36 +265,57 @@ namespace melo {
 				std::vector<cpx> audio_slice;
 				SpectrumImage spectrum_slice;
 
+				int back_start_point = sample - spectrum_option.s_window_half;
+				int back_slice_size = p_Sample - back_start_point;
+				for (int i = 0; i < back_slice_size; i++) {
+					audio_slice.push_back(cpx((double)audio_buffer[back_buffer].data[0][back_start_point + i], 0.0));
+				}
+
+
+				int target_slice_size = spectrum_option.s_window - back_slice_size;
+				for (int i = 0; i < target_slice_size; i++) {
+					audio_slice.push_back(cpx((double)audio_buffer[current_target].data[0][i], 0.0));
+				}
 				// need to concern target_buffer because fft window will inevitably invade it
 				// s_location = sample
 
 				FFT(audio_slice, false);
-				spectrum_slice.data = audio_slice;
 
-				spectrum_buffer[back_buffer].data.push_back(spectrum_slice);
-				
+				spectrum_slice.data = audio_slice;
+				spectrum_slice.s_location = sample;
+
+				spectrum_buffer[back_buffer].data.push_back(spectrum_slice);				
 			}
 			//set spectrum_filled[back_buffer] to true
+			spectrum_filled[back_buffer] = true;
 
-
-			spectrum_buffer[target_buffer].data.clear(); //clear target spectrum buffer
+			spectrum_buffer[current_target].data.clear(); //clear target spectrum buffer
+			
 			//target_buffer fft
-			for (int sample = 0;; sample += spectrum_option.s_gap) {
-				if (sample + spectrum_option.s_window_half > p_Sample)
+			sample -= p_Sample;
+			for (;; sample += spectrum_option.s_gap) {
+				if (sample + spectrum_option.s_window_half >= p_Sample)
 					break;
 
 				std::vector<cpx> audio_slice;
 				SpectrumImage spectrum_slice;
 
 				//slice audiodata to audio_slice
+				int target_start_point = sample - spectrum_option.s_window_half;
+				for (int i = 0; i < spectrum_option.s_window; i++) {
+					audio_slice.push_back(cpx((double)audio_buffer[current_target].data[0][target_start_point + i], 0.0));
+				}
+
 				//FFT
-				//s_location = sample
-
 				FFT(audio_slice, false);
-				spectrum_slice.data = audio_slice;
 
-				spectrum_buffer[target_buffer].data.push_back(spectrum_slice);
+				spectrum_slice.data = audio_slice;
+				spectrum_slice.s_location = sample; // s_location = sample
+
+				spectrum_buffer[current_target].data.push_back(spectrum_slice);
 			}
+
+			spectrum_filled[current_target] = false;
 		}
 
 		bool next_buffer_filled() {

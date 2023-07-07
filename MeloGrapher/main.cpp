@@ -1,4 +1,4 @@
-#include"common.h"
+#include"meloWrapper.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
@@ -36,19 +36,37 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 }
 
 
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	PAINTSTRUCT ps;
+
+	static melo::Player* melo_player;
+	AudioData* data;
 
 	switch (iMessage) {
 	case WM_CREATE:
 		hWndMain = hWnd;
 
+		melo_player = new melo::Player(hWnd);
+		melo_player->readAudio("C:/Users/ydhan/dlg project/test/ffmpegtest/test.mp3");
+		melo_player->setSpecturmOption();
+		melo_player->Start();
+
+		return 0;
+	case MM_WOM_DONE:
+		if (!melo_player->is_muisc_start())
+			return 0;
+
+		if (!melo_player->next_buffer_filled()) {
+			//melo_player->fillBuffer();
+			PostMessage(hWnd, MM_WOM_DONE, 0, 0);
+			return 0;
+		}
+		melo_player->WriteWaveBuffer();
 		return 0;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-
-
 
 		EndPaint(hWnd, &ps);
 		return 0;

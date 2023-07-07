@@ -32,6 +32,7 @@
     <ClInclude Include="ffmpegWrapper.h" />
     <ClInclude Include="FFT.h" />
     <ClInclude Include="meloGrapher.h" />
+    <ClInclude Include="meloWrapper.h" />
     <ClInclude Include="noiseMaker.h" />
     <ClInclude Include="spectrumUtils.h" />
     <ClInclude Include="vector2d.h" />
