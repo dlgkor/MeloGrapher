@@ -3,7 +3,6 @@
 #include"vector2d.h"
 
 namespace melo {
-	typedef std::complex<double> cpx;
 
 	class SpectrumOption {
 	public:

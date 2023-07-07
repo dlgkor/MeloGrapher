@@ -1,10 +1,6 @@
 #pragma once
 #include"common.h"
 
-#define M_PI 3.14159265
-
-typedef std::complex<double> cpx;
-
 void FFT(std::vector<cpx>& v, bool inv) {
 	int S = v.size();
 

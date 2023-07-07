@@ -24,9 +24,17 @@ namespace melo {
 		void setSpecturmOption() {
 			SpectrumOption spectrum_option;
 
-			spectrum_option.s_gap = 32768 / 16;
+			spectrum_option.s_gap = 32768 / 32;
 			spectrum_option.s_window = 32768 / 4;
 			spectrum_option.s_window_half = spectrum_option.s_window / 2;
+			spectrum_option.base_frequency = (double)m_decoder->sampleRate / (double)spectrum_option.s_window;
+
+			spectrum_option.max_out_frequency = 1000;
+			spectrum_option.min_out_frequency = 10;
+			spectrum_option.max_height = 400;
+			spectrum_option.n_graph = 100; 
+			spectrum_option.r_center = { 0, 0 };
+			spectrum_option.radius = 200;
 
 			m_buffer->set_spectrum_option(spectrum_option);
 		}
@@ -78,6 +86,10 @@ namespace melo {
 		}
 		bool is_muisc_start() {
 			return music_start;
+		}
+
+		void displaySpectrum(Gdiplus::Graphics* p_graphics) {
+			m_buffer->displaySpectrumImg(p_graphics);
 		}
 
 		~Player() {

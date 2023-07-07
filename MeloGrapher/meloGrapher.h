@@ -4,6 +4,7 @@
 #include"audioUtils.h"
 #include"spectrumUtils.h"
 #include"FFT.h"
+#include"displaySpectrum.h"
 
 #define MAX_MELO_BUFFER 8
 
@@ -20,7 +21,8 @@ namespace melo {
 		int p_Sample; //buffer size
 
 		int target_buffer;
-		long long int cursor; //cursor which means the time of music currently reading
+		int cursor; //cursor which means the time of music currently reading
+		int spectrum_cursor;
 
 		int end_buffer; //end buffer which is activated when buffer reads EOF
 
@@ -29,12 +31,16 @@ namespace melo {
 		SpectrumVideo spectrum_buffer[MAX_MELO_BUFFER];
 		bool spectrum_filled[MAX_MELO_BUFFER];
 
+		double dMaxSample;
+
 	public:
 		BufferWrapper(int _channels, int _p_Sample)
 			: channels(_channels), p_Sample(_p_Sample) {
+			dMaxSample = (double)(pow(2, (sizeof(short) * 8) - 1) - 1);
 
 			target_buffer = 0;
 			cursor = 0;
+			spectrum_cursor = 0;
 			end_buffer = -1;
 
 			for (int i = 0; i < MAX_MELO_BUFFER; i++) {
@@ -81,6 +87,8 @@ namespace melo {
 				audio_buffer[target_buffer].cur = audio_buffer[target_buffer].n_samples;
 
 				int next_target_buffer = (target_buffer + 1) % MAX_MELO_BUFFER;
+				cursor = 0;
+				spectrum_cursor = 0;
 
 				for (int channel = 0; channel < channels; channel++) {
 					for (int sample = 0; sample < blockSize - block_size1; sample++) {
@@ -97,6 +105,8 @@ namespace melo {
 				empty_audio_buffer.push(target_buffer);
 
 				target_buffer = next_target_buffer;
+
+				cursor += blockSize - block_size1;
 			}
 			else {
 				for (int channel = 0; channel < channels; channel++) {
@@ -106,9 +116,11 @@ namespace melo {
 				}
 
 				audio_buffer[target_buffer].cur += blockSize;
-			}
 
-			cursor += blockSize;
+				cursor += blockSize;
+			}			
+
+			check_current_spectrum();
 
 			return audio_block;
 		}
@@ -268,13 +280,13 @@ namespace melo {
 				int back_start_point = sample - spectrum_option.s_window_half;
 				int back_slice_size = p_Sample - back_start_point;
 				for (int i = 0; i < back_slice_size; i++) {
-					audio_slice.push_back(cpx((double)audio_buffer[back_buffer].data[0][back_start_point + i], 0.0));
+					audio_slice.push_back(cpx((double)audio_buffer[back_buffer].data[0][back_start_point + i] / dMaxSample, 0.0));
 				}
 
 
 				int target_slice_size = spectrum_option.s_window - back_slice_size;
 				for (int i = 0; i < target_slice_size; i++) {
-					audio_slice.push_back(cpx((double)audio_buffer[current_target].data[0][i], 0.0));
+					audio_slice.push_back(cpx((double)audio_buffer[current_target].data[0][i] / dMaxSample, 0.0));
 				}
 				// need to concern target_buffer because fft window will inevitably invade it
 				// s_location = sample
@@ -287,10 +299,13 @@ namespace melo {
 				spectrum_buffer[back_buffer].data.push_back(spectrum_slice);				
 			}
 			//set spectrum_filled[back_buffer] to true
+			spectrum_buffer[back_buffer].resetCursor();
 			spectrum_filled[back_buffer] = true;
 
-			spectrum_buffer[current_target].data.clear(); //clear target spectrum buffer
-			
+			spectrum_filled[current_target] = false;
+
+			spectrum_buffer[current_target].ClearData();
+
 			//target_buffer fft
 			sample -= p_Sample;
 			for (;; sample += spectrum_option.s_gap) {
@@ -303,7 +318,7 @@ namespace melo {
 				//slice audiodata to audio_slice
 				int target_start_point = sample - spectrum_option.s_window_half;
 				for (int i = 0; i < spectrum_option.s_window; i++) {
-					audio_slice.push_back(cpx((double)audio_buffer[current_target].data[0][target_start_point + i], 0.0));
+					audio_slice.push_back(cpx((double)audio_buffer[current_target].data[0][target_start_point + i] / dMaxSample, 0.0));
 				}
 
 				//FFT
@@ -315,7 +330,7 @@ namespace melo {
 				spectrum_buffer[current_target].data.push_back(spectrum_slice);
 			}
 
-			spectrum_filled[current_target] = false;
+			
 		}
 
 		bool next_buffer_filled() {
@@ -327,12 +342,25 @@ namespace melo {
 			return !(audio_filled[next_target_buffer] == false || spectrum_filled[next_target_buffer] == false);
 		}
 
-		SpectrumImage* get_spectrum_img() {
+		void check_current_spectrum() {
+			if (spectrum_buffer[target_buffer].data[spectrum_cursor].s_location < cursor) {
+				if(spectrum_cursor + 1 < spectrum_buffer[target_buffer].data.size())
+					spectrum_cursor++;
+			}
+		}
+
+		
+		void displaySpectrumImg(Gdiplus::Graphics* p_graphic) {
 			//check spectrumimg from cursur until it's s_location overs current audio cur(sample)
-			//change cursur
-			//return spectrum img
+			//change cursor
+			if (spectrum_filled[target_buffer] == false) {
+				return;
+			}
 
+			//cpx_buffer.back();
 
+			PrintCircularFrequencyWithGDI(p_graphic, spectrum_buffer[target_buffer].data[spectrum_cursor].data, spectrum_option);
+			//display spectrum img
 		}
 
 		void clear_all_buffer() {
