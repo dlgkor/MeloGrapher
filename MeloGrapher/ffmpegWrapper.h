@@ -82,7 +82,7 @@ public:
 		number_of_samples = sampleRate * (duration + 1);
 	}
 
-	int get_audiodata(AVFrame* frame, AudioData* audio) {
+	int get_audiodata(AVFrame* frame, AudioData* audio, int audio_cursor) {
 		uint8_t** data = frame->extended_data; //sample data(real audio data) pointer
 		const int samples = frame->nb_samples; //sample per frame. generally 1152
 
@@ -93,19 +93,19 @@ public:
 			if (sampleFormat == AV_SAMPLE_FMT_FLTP) {
 				for (int sample = 0; sample < samples; ++sample) {
 					const float amplitude = *reinterpret_cast<const float*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
-					audio->data[channel][audio->cur + sample] = (short)(clip((double)amplitude, 1.0) * dMaxSample);
+					audio->data[channel][audio_cursor + sample] = (short)(clip((double)amplitude, 1.0) * dMaxSample);
 				}
 			}
 			else if (sampleFormat == AV_SAMPLE_FMT_DBLP) {
 				for (int sample = 0; sample < samples; ++sample) {
 					const double amplitude = *reinterpret_cast<const double*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
-					audio->data[channel][audio->cur + sample] = (short)(clip(amplitude, 1.0) * dMaxSample);
+					audio->data[channel][audio_cursor + sample] = (short)(clip(amplitude, 1.0) * dMaxSample);
 				}
 			}
 			else if (sampleFormat == AV_SAMPLE_FMT_S16P) {
 				for (int sample = 0; sample < samples; ++sample) {
 					const short amplitude = *reinterpret_cast<const short*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
-					audio->data[channel][audio->cur + sample] = amplitude;
+					audio->data[channel][audio_cursor + sample] = amplitude;
 				}
 			}
 			else {
@@ -120,8 +120,9 @@ public:
 	AudioData* decode_mp3(int n_sample) {
 		const int MAX_EXTRA_SIZE = 10000;
 		AudioData* audio = new AudioData(channels, n_sample + MAX_EXTRA_SIZE);
+		int audio_cursor = 0;
 
-		while (audio->cur < n_sample) {
+		while (audio_cursor < n_sample) {
 			if (av_read_frame(formatcontext, packet) < 0) {
 				delete audio;
 				av_frame_unref(frame);
@@ -133,9 +134,9 @@ public:
 					//std::cout << "avcodec send packet failed" << std::endl;
 				}
 				while (avcodec_receive_frame(codecContext, frame) >= 0) {
-					get_audiodata(frame, audio);
+					get_audiodata(frame, audio, audio_cursor);
 					
-					audio->cur += frame->nb_samples;
+					audio_cursor += frame->nb_samples;
 				}
 			}
 
@@ -144,13 +145,14 @@ public:
 
 		av_frame_unref(frame);
 
-		audio->n_samples = audio->cur; //update number of samples in audiodata
+		audio->n_samples = audio_cursor; //update number of samples in audiodata
 
 		return audio;
 	}
 
 	AudioData* decode_mp3_all() {
 		AudioData* audio = new AudioData(channels, number_of_samples);
+		int audio_cursor = 0;
 
 		while (av_read_frame(formatcontext, packet) >= 0) {
 			if (packet->stream_index == ASI) {
@@ -158,9 +160,9 @@ public:
 					//std::cout << "avcodec send packet failed" << std::endl;
 				}
 				while (avcodec_receive_frame(codecContext, frame) >= 0) {
-					get_audiodata(frame, audio);
+					get_audiodata(frame, audio, audio_cursor);
 
-					audio->cur += frame->nb_samples;
+					audio_cursor += frame->nb_samples;
 				}
 			}
 
@@ -169,7 +171,7 @@ public:
 
 		av_frame_unref(frame);
 
-		audio->n_samples = audio->cur;
+		audio->n_samples = audio_cursor;
 
 		return audio;
 	}

@@ -18,13 +18,14 @@ namespace melo {
 		audioCapacitor capacitor;
 
 		int channels;
-		int p_Sample; //buffer size
+		int p_Sample; // buffer size
 
 		int target_buffer;
-		int cursor; //cursor which means the time of music currently reading
+		//int cursor; // cursor which means the time of music currently reading
+		int audio_cursor; // cursor in relative to target audio buffer
 		int spectrum_cursor;
 
-		int end_buffer; //end buffer which is activated when buffer reads EOF
+		int end_buffer; // end buffer which is activated when buffer reads EOF
 
 
 		SpectrumOption spectrum_option;
@@ -40,7 +41,9 @@ namespace melo {
 			dMaxSample = (double)(pow(2, (sizeof(short) * 8) - 1) - 1);
 
 			target_buffer = 0;
-			cursor = 0;
+			//cursor = 0;
+
+			audio_cursor = 0;
 			spectrum_cursor = 0;
 			end_buffer = -1;
 
@@ -81,48 +84,49 @@ namespace melo {
 				return nullptr;
 			}
 
-			if (audio_buffer[target_buffer].cur + blockSize > audio_buffer[target_buffer].n_samples) {
-				int block_size1 = audio_buffer[target_buffer].n_samples - audio_buffer[target_buffer].cur;
+			if (audio_cursor + blockSize > p_Sample) {
+				int block_size1 = p_Sample - audio_cursor;
 				for (int channel = 0; channel < channels; channel++) {
 					for (int sample = 0; sample < block_size1; sample++) {
-						audio_block->data[channel][sample] = audio_buffer[target_buffer].data[channel][audio_buffer[target_buffer].cur + sample];
+						audio_block->data[channel][sample] = audio_buffer[target_buffer].data[channel][audio_cursor + sample];
 					}
 				}
 
-				audio_block->cur += block_size1;
+				//audio_block->cur = block_size1;
 
 				int next_target_buffer = (target_buffer + 1) % MAX_MELO_BUFFER;
 
 
 				for (int channel = 0; channel < channels; channel++) {
 					for (int sample = 0; sample < blockSize - block_size1; sample++) {
-						audio_block->data[channel][audio_block->cur + sample] = audio_buffer[next_target_buffer].data[channel][sample];
+						audio_block->data[channel][block_size1 + sample] = audio_buffer[next_target_buffer].data[channel][sample];
 					}
 				}
 
-				audio_block->cur += blockSize - block_size1;
-				audio_buffer[next_target_buffer].cur = blockSize - block_size1;
+				//audio_block->cur = blockSize;
+				//audio_buffer[next_target_buffer].cur = blockSize - block_size1;
 
 				audio_filled[target_buffer] = false;
-				audio_buffer[target_buffer].cur = 0;
+				//audio_buffer[target_buffer].cur = 0;
 				empty_audio_buffer.push(target_buffer);
 
 				target_buffer = next_target_buffer;
-				cursor = blockSize - block_size1;
+				//cursor = blockSize - block_size1;
+
+				audio_cursor = blockSize - block_size1;
 				spectrum_cursor = 0;
 			}
 			else {
 				for (int channel = 0; channel < channels; channel++) {
 					for (int sample = 0; sample < blockSize; sample++) {
-						audio_block->data[channel][sample] = audio_buffer[target_buffer].data[channel][audio_buffer[target_buffer].cur + sample];
+						audio_block->data[channel][sample] = audio_buffer[target_buffer].data[channel][audio_cursor + sample];
 					}
 				}
 
-				audio_buffer[target_buffer].cur += blockSize;
-				cursor += blockSize;
+				audio_cursor += blockSize;
 			}
 
-			check_current_spectrum();
+			//check_current_spectrum();
 
 			return audio_block;
 		}
@@ -143,10 +147,9 @@ namespace melo {
 				if (audio_filled[current_target])
 					continue;
 
-				int ref = capacitor.Pull(&audio_buffer[current_target], p_Sample);
+				int ref = capacitor.Pull(&audio_buffer[current_target], p_Sample, 0);
 				if (ref == p_Sample) {
 					audio_filled[current_target] = true;
-					audio_buffer[current_target].resetCursor();
 					fill_spectrum_buffer(current_target);
 					continue;
 				}
@@ -166,7 +169,6 @@ namespace melo {
 				}
 
 				//get deficient audio data from mp3 decoder
-				audio_buffer[current_target].resetCursor();
 
 				AudioData remain_audio(channels, 10000);
 				int remain_size = audio->n_samples - missing_size;
@@ -201,13 +203,6 @@ namespace melo {
 		}
 
 		void fill_spectrum_buffer(int current_target) {
-			// check spectrum form before buffer and current buffer
-			// check untill window right end cross the limit
-			//for (int i = 0; i < MAX_MELO_BUFFER; i++) {
-				//spectrum_filled[i] = true;
-			//}
-			//return;
-
 			int back_buffer = (current_target - 1 + MAX_MELO_BUFFER) % MAX_MELO_BUFFER;
 
 			int b_cur;
@@ -277,9 +272,7 @@ namespace melo {
 				spectrum_slice.s_location = sample; // s_location = sample
 
 				spectrum_buffer[current_target].data.push_back(spectrum_slice);
-			}
-
-			
+			}			
 		}
 
 		bool next_buffer_filled() {
@@ -291,10 +284,11 @@ namespace melo {
 			return !(audio_filled[next_target_buffer] == false || spectrum_filled[next_target_buffer] == false);
 		}
 
-
-
 		void check_current_spectrum() {
-			if (spectrum_buffer[target_buffer].data[spectrum_cursor].s_location < cursor) {
+			if (spectrum_buffer[target_buffer].data.size() == 0)
+				return;
+
+			if (spectrum_buffer[target_buffer].data[spectrum_cursor].s_location < audio_cursor) {
 				if(spectrum_cursor + 1 < spectrum_buffer[target_buffer].data.size())
 					spectrum_cursor++;
 			}
@@ -324,16 +318,13 @@ namespace melo {
 			}
 
 			target_buffer = 0;
-			cursor = 0;
+			audio_cursor = 0;
 			spectrum_cursor = 0;
 			end_buffer = -1;
 		}
 
 		void moveCursor(long long int sample_location) {
 			//move mp3 decoder cursur from the outsid mp3Decoder class
-			clear_all_buffer();
-
-			cursor = sample_location;
 		}
 
 		bool music_ended() {

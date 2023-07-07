@@ -98,7 +98,7 @@ void paintFunction(HWND hWnd, HDC hdc) {
 	p_graphic = new Gdiplus::Graphics(hMemDC);
 	p_graphic->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
-
+	melo_player->checkSpectrum();
 	melo_player->displaySpectrum(p_graphic);
 
 	delete p_graphic;
@@ -116,7 +116,7 @@ void waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwParam1, DWORD dwParam2)
 	if (!melo_player->is_muisc_start())
 		return;
 
-	while (!melo_player->next_buffer_filled()) {}
+	while (!melo_player->next_buffer_filled());
 
 	melo_player->WriteWaveBuffer();
 	return;
@@ -137,27 +137,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		hWndMain = hWnd;
 
-		melo_player = new melo::Player(waveOutProcWrap);
-		melo_player->readAudio("C:/Users/ydhan/dlg project/test/ffmpegtest/test.mp3");
+		melo_player = new melo::Player();
+		melo_player->readAudio("D:/mp3/Sneaky Driver.mp3");
 		melo_player->setSpecturmOption();
-		melo_player->Start();
-
-
+		
 		SetTimer(hWnd, 1, 10, NULL);
 
 		hbit = NULL;
 		return 0;
-	/*
-	case MM_WOM_DONE:
-		if (!melo_player->is_muisc_start())
-			return 0;
-		if (!melo_player->next_buffer_filled()) {
-			PostMessage(hWnd, MM_WOM_DONE, 0, 0);
-			return 0;
-		}
-		melo_player->WriteWaveBuffer();
+	case WM_LBUTTONDOWN:
+		melo_player->setWaveOut(waveOutProcWrap);
+		melo_player->Start();
 		return 0;
-	*/
 	case WM_TIMER:
 		switch (wParam)
 		{

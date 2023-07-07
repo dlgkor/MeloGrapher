@@ -12,14 +12,10 @@ namespace melo {
 
 		bool music_start;
 	public:
-		Player(void* notify_function) {
+		Player() {
 			m_decoder = nullptr;
 			m_buffer = nullptr;
-			w_sound = new W_Sound();
-
-			w_sound->OpenDevice(notify_function);
-
-			music_start = false;
+			w_sound = nullptr;
 		}
 		void setSpecturmOption() {
 			SpectrumOption spectrum_option;
@@ -52,6 +48,11 @@ namespace melo {
 			m_buffer = new melo::BufferWrapper();
 			m_buffer->set_audio_option(m_decoder->channels, 44100);
 		}
+		void setWaveOut(void* notify_function) {
+			w_sound = new W_Sound(m_decoder->sampleRate);
+			w_sound->OpenDevice(notify_function);
+			music_start = false;
+		}
 		void Start() {
 			w_sound->StartDevice();
 
@@ -81,6 +82,10 @@ namespace melo {
 			w_sound->WriteWaveBuffer(&data->data[0][0]);
 			delete data;
 			return;
+		}
+
+		void checkSpectrum() {
+			m_buffer->check_current_spectrum();
 		}
 
 		int b_queueSize() {

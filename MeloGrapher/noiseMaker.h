@@ -18,9 +18,9 @@ private:
 	unsigned int ct_Sample;
 	int m_is_start;
 public:
-	W_Sound() {
+	W_Sound(int sampleRate) {
 		m_nBlockSamples = 512; //버퍼 하나당 샘플수
-		m_nSampleRate = 44100; //1초에 재생되는 샘플수
+		m_nSampleRate = sampleRate; //1초에 재생되는 샘플수
 		m_nBlockCount = 8; //버퍼의 개수
 		m_nBlockCurrent = 0;
 
