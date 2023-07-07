@@ -32,7 +32,6 @@ namespace melo {
 		bool spectrum_filled[MAX_MELO_BUFFER];
 
 		double dMaxSample;
-
 		
 
 	public:
@@ -66,7 +65,7 @@ namespace melo {
 		void set_spectrum_option(SpectrumOption _spectrum_option) {
 			spectrum_option = _spectrum_option;
 		}
-
+		
 		AudioData* display_block(int blockSize) {
 			/*
 			*print wave and spectrum, if exists
@@ -91,11 +90,9 @@ namespace melo {
 				}
 
 				audio_block->cur += block_size1;
-				audio_buffer[target_buffer].cur = audio_buffer[target_buffer].n_samples;
 
 				int next_target_buffer = (target_buffer + 1) % MAX_MELO_BUFFER;
-				cursor = 0;
-				spectrum_cursor = 0;
+
 
 				for (int channel = 0; channel < channels; channel++) {
 					for (int sample = 0; sample < blockSize - block_size1; sample++) {
@@ -108,12 +105,11 @@ namespace melo {
 
 				audio_filled[target_buffer] = false;
 				audio_buffer[target_buffer].cur = 0;
-
 				empty_audio_buffer.push(target_buffer);
 
 				target_buffer = next_target_buffer;
-
-				cursor += blockSize - block_size1;
+				cursor = blockSize - block_size1;
+				spectrum_cursor = 0;
 			}
 			else {
 				for (int channel = 0; channel < channels; channel++) {
@@ -123,24 +119,26 @@ namespace melo {
 				}
 
 				audio_buffer[target_buffer].cur += blockSize;
-
 				cursor += blockSize;
-			}			
+			}
 
 			check_current_spectrum();
 
 			return audio_block;
 		}
 
-		void fill_buffer(mp3Decoder* target_mp3) {
+
+		void fill_empty_buffer(mp3Decoder* target_mp3) {
 			/*
 			*fill buffer if buffer is empty
 			*use audioCapacitor in audiobuffer.h
 			*get audioData from mp3decode in ffmpegWrapper.h
 			*I think filled buffer will be 1 second(44100 sample)
 			*/
-			for (int i = 0; i < MAX_MELO_BUFFER; i++) {
-				int current_target = (target_buffer + i) % MAX_MELO_BUFFER;
+			while (empty_audio_buffer.size() > 0) {
+
+				int current_target = empty_audio_buffer.front();
+				empty_audio_buffer.pop();
 
 				if (audio_filled[current_target])
 					continue;
@@ -148,6 +146,7 @@ namespace melo {
 				int ref = capacitor.Pull(&audio_buffer[current_target], p_Sample);
 				if (ref == p_Sample) {
 					audio_filled[current_target] = true;
+					audio_buffer[current_target].resetCursor();
 					fill_spectrum_buffer(current_target);
 					continue;
 				}
@@ -169,7 +168,6 @@ namespace melo {
 				//get deficient audio data from mp3 decoder
 				audio_buffer[current_target].resetCursor();
 
-
 				AudioData remain_audio(channels, 10000);
 				int remain_size = audio->n_samples - missing_size;
 				for (int channel = 0; channel < channels; channel++) {
@@ -186,70 +184,11 @@ namespace melo {
 				audio_filled[current_target] = true;
 
 				//activate function check_spectrum continuously
-				// 
+
 				fill_spectrum_buffer(current_target);
 			}
-		}
 
-		void fill_empty_buffer(mp3Decoder* target_mp3) {
-			/*
-			*fill buffer if buffer is empty
-			*use audioCapacitor in audiobuffer.h
-			*get audioData from mp3decode in ffmpegWrapper.h
-			*I think filled buffer will be 1 second(44100 sample)
-			*/
-			if (empty_audio_buffer.size() == 0) {
-				return;
-			}
-
-			int current_target = empty_audio_buffer.front();
-			empty_audio_buffer.pop();
-
-			if (audio_filled[current_target])
-				return;
-
-			int ref = capacitor.Pull(&audio_buffer[current_target], p_Sample);
-			if (ref == p_Sample) {
-				audio_filled[current_target] = true;
-				fill_spectrum_buffer(current_target);
-				return;
-			}
-			//Pull from capacitor
-
-			int missing_size = p_Sample - ref;
-			AudioData* audio = target_mp3->decode_mp3(missing_size);
-
-			if (audio == nullptr) {
-				end_buffer = current_target;
-				return;
-			}
-
-			for (int channel = 0; channel < channels; channel++) {
-				memcpy_s(&audio_buffer[current_target].data[channel][ref], sizeof(short) * missing_size,
-					&audio->data[channel][0], sizeof(short) * missing_size);
-			}
-
-			//get deficient audio data from mp3 decoder
-			audio_buffer[current_target].resetCursor();
-
-			AudioData remain_audio(channels, 10000);
-			int remain_size = audio->n_samples - missing_size;
-			for (int channel = 0; channel < channels; channel++) {
-				for (int j = 0; j < remain_size; j++) {
-					remain_audio.data[channel][j] = audio->data[channel][missing_size + j];
-				}
-			}
-
-			capacitor.Push(remain_audio, remain_size);
-			//save remaning audio data from mp3 decoder
-
-			delete audio;
-
-			audio_filled[current_target] = true;
-
-			//activate function check_spectrum continuously
-			
-			fill_spectrum_buffer(current_target);
+			return;
 		}
 
 		static void fill_buffer_wrapper(BufferWrapper* obj, mp3Decoder* target_mp3) {
@@ -264,6 +203,10 @@ namespace melo {
 		void fill_spectrum_buffer(int current_target) {
 			// check spectrum form before buffer and current buffer
 			// check untill window right end cross the limit
+			//for (int i = 0; i < MAX_MELO_BUFFER; i++) {
+				//spectrum_filled[i] = true;
+			//}
+			//return;
 
 			int back_buffer = (current_target - 1 + MAX_MELO_BUFFER) % MAX_MELO_BUFFER;
 
@@ -310,7 +253,6 @@ namespace melo {
 			spectrum_filled[back_buffer] = true;
 
 			spectrum_filled[current_target] = false;
-
 			spectrum_buffer[current_target].ClearData();
 
 			//target_buffer fft
@@ -348,6 +290,8 @@ namespace melo {
 
 			return !(audio_filled[next_target_buffer] == false || spectrum_filled[next_target_buffer] == false);
 		}
+
+
 
 		void check_current_spectrum() {
 			if (spectrum_buffer[target_buffer].data[spectrum_cursor].s_location < cursor) {

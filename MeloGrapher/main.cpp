@@ -65,7 +65,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
-void paintFunction(HWND hWnd, HDC hdc, melo::Player* melo_player) {
+melo::Player* melo_player;
+
+void paintFunction(HWND hWnd, HDC hdc) {
 	HDC hMemDC;
 	HBITMAP OldBit;
 	HBRUSH dbrush;
@@ -97,7 +99,7 @@ void paintFunction(HWND hWnd, HDC hdc, melo::Player* melo_player) {
 	p_graphic->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
 
-	//melo_player->displaySpectrum(p_graphic);
+	melo_player->displaySpectrum(p_graphic);
 
 	delete p_graphic;
 
@@ -106,28 +108,46 @@ void paintFunction(HWND hWnd, HDC hdc, melo::Player* melo_player) {
 	if (hbit) DrawBitmap(hdc, 0, 0, hbit); //hbit을 hdc를 이용해 출력
 }
 
+void waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwParam1, DWORD dwParam2)
+{
+	if (uMsg != WOM_DONE) return;
+	//s_buffer->fill_buffer(s_decoder);
+	
+	if (!melo_player->is_muisc_start())
+		return;
+
+	while (!melo_player->next_buffer_filled()) {}
+
+	melo_player->WriteWaveBuffer();
+	return;
+}
+
+static void CALLBACK waveOutProcWrap(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
+{
+	waveOutProc(hWaveOut, uMsg, dwParam1, dwParam2);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
 	//static RECT crt;
 	PAINTSTRUCT ps;
 
-	static melo::Player* melo_player;
-	AudioData* data;
-	
 
 	switch (iMessage) {
 	case WM_CREATE:
 		hWndMain = hWnd;
 
-		melo_player = new melo::Player(hWnd);
+		melo_player = new melo::Player(waveOutProcWrap);
 		melo_player->readAudio("C:/Users/ydhan/dlg project/test/ffmpegtest/test.mp3");
 		melo_player->setSpecturmOption();
 		melo_player->Start();
+
 
 		SetTimer(hWnd, 1, 10, NULL);
 
 		hbit = NULL;
 		return 0;
+	/*
 	case MM_WOM_DONE:
 		if (!melo_player->is_muisc_start())
 			return 0;
@@ -137,6 +157,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		}
 		melo_player->WriteWaveBuffer();
 		return 0;
+	*/
 	case WM_TIMER:
 		switch (wParam)
 		{
@@ -148,7 +169,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 
-		paintFunction(hWnd, hdc, melo_player);
+		paintFunction(hWnd, hdc);
 		
 		EndPaint(hWnd, &ps);
 		return 0;

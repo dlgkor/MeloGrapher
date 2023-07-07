@@ -34,8 +34,8 @@ public:
 
 		m_is_start = 0;
 	}
-	int OpenDevice(HWND notify_wnd) {
-		if (waveOutOpen(&m_hwDevice, NULL, &waveFormat, (DWORD_PTR)notify_wnd, (DWORD_PTR)0, (DWORD)(CALLBACK_WINDOW | WAVE_ALLOWSYNC)) != S_OK)
+	int OpenDevice(void* notify_function) {
+		if (waveOutOpen(&m_hwDevice, NULL, &waveFormat, (DWORD_PTR)notify_function, (DWORD_PTR)0, (DWORD)(CALLBACK_FUNCTION)) != S_OK)
 			return 0;
 		m_pWaveHeader = new WAVEHDR[m_nBlockCount]; //버퍼 개수만큼 wavehdr 메모리 할당
 		ZeroMemory(m_pWaveHeader, sizeof(WAVEHDR) * m_nBlockCount); //메모리를 모두 비운다

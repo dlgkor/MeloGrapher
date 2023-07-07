@@ -12,19 +12,19 @@ namespace melo {
 
 		bool music_start;
 	public:
-		Player(HWND hWnd) {
+		Player(void* notify_function) {
 			m_decoder = nullptr;
 			m_buffer = nullptr;
 			w_sound = new W_Sound();
 
-			w_sound->OpenDevice(hWnd);
+			w_sound->OpenDevice(notify_function);
 
 			music_start = false;
 		}
 		void setSpecturmOption() {
 			SpectrumOption spectrum_option;
 
-			spectrum_option.s_gap = 32768 / 2;
+			spectrum_option.s_gap = 32768 / 16;
 			spectrum_option.s_window = 32768 / 4;
 			spectrum_option.s_window_half = spectrum_option.s_window / 2;
 			spectrum_option.base_frequency = (double)m_decoder->sampleRate / (double)spectrum_option.s_window;
@@ -69,9 +69,7 @@ namespace melo {
 
 			music_start = true;
 		}
-		void fillBuffer() {
-			m_buffer->fill_buffer(m_decoder);
-		}
+
 		void WriteWaveBuffer() {
 			AudioData* data = m_buffer->display_block(w_sound->GetBlockSamples());
 
@@ -92,6 +90,7 @@ namespace melo {
 		bool next_buffer_filled() {
 			return m_buffer->next_buffer_filled();
 		}
+
 		bool is_muisc_start() {
 			return music_start;
 		}
