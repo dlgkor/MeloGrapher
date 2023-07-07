@@ -65,7 +65,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return (int)Message.wParam;
 }
 
-void painFunction(HWND hWnd, HDC hdc, melo::Player* melo_player) {
+void paintFunction(HWND hWnd, HDC hdc, melo::Player* melo_player) {
 	HDC hMemDC;
 	HBITMAP OldBit;
 	HBRUSH dbrush;
@@ -87,7 +87,7 @@ void painFunction(HWND hWnd, HDC hdc, melo::Player* melo_player) {
 	hMemDC = CreateCompatibleDC(hdc); //hdc와 호환되는 dc 생성
 	OldBit = (HBITMAP)SelectObject(hMemDC, hbit); //hbit을 hmemdc에 선택
 
-	dbrush = CreateSolidBrush(RGB(0, 0, 255));
+	dbrush = CreateSolidBrush(RGB(200, 200, 200));
 	FillRect(hMemDC, &crt, dbrush);
 	DeleteObject(dbrush);
 
@@ -97,7 +97,7 @@ void painFunction(HWND hWnd, HDC hdc, melo::Player* melo_player) {
 	p_graphic->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
 
-	melo_player->displaySpectrum(p_graphic);
+	//melo_player->displaySpectrum(p_graphic);
 
 	delete p_graphic;
 
@@ -131,7 +131,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case MM_WOM_DONE:
 		if (!melo_player->is_muisc_start())
 			return 0;
-
 		if (!melo_player->next_buffer_filled()) {
 			PostMessage(hWnd, MM_WOM_DONE, 0, 0);
 			return 0;
@@ -149,7 +148,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 
-		painFunction(hWnd, hdc, melo_player);
+		paintFunction(hWnd, hdc, melo_player);
 		
 		EndPaint(hWnd, &ps);
 		return 0;

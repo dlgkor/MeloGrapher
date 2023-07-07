@@ -24,7 +24,7 @@ namespace melo {
 		void setSpecturmOption() {
 			SpectrumOption spectrum_option;
 
-			spectrum_option.s_gap = 32768 / 32;
+			spectrum_option.s_gap = 32768 / 2;
 			spectrum_option.s_window = 32768 / 4;
 			spectrum_option.s_window_half = spectrum_option.s_window / 2;
 			spectrum_option.base_frequency = (double)m_decoder->sampleRate / (double)spectrum_option.s_window;
@@ -38,6 +38,7 @@ namespace melo {
 
 			m_buffer->set_spectrum_option(spectrum_option);
 		}
+
 		void readAudio(const char* filename) {
 			if (m_decoder != nullptr) {
 				delete m_decoder;
@@ -47,7 +48,9 @@ namespace melo {
 			}
 
 			m_decoder = new mp3Decoder(filename);
-			m_buffer = new melo::BufferWrapper(m_decoder->channels, 44100);
+
+			m_buffer = new melo::BufferWrapper();
+			m_buffer->set_audio_option(m_decoder->channels, 44100);
 		}
 		void Start() {
 			w_sound->StartDevice();
@@ -81,6 +84,11 @@ namespace melo {
 			delete data;
 			return;
 		}
+
+		int b_queueSize() {
+			return m_buffer->get_buffer_queue_size();
+		}
+
 		bool next_buffer_filled() {
 			return m_buffer->next_buffer_filled();
 		}
@@ -96,8 +104,14 @@ namespace melo {
 			w_sound->StopDevice();
 			w_sound->CloseDeivce();
 
-			delete m_decoder;
-			delete m_buffer;
+
+			if (m_decoder != nullptr) {
+				delete m_decoder;
+			}
+			if (m_buffer != nullptr) {
+				delete m_buffer;
+			}
+
 			delete w_sound;
 		}
 	};

@@ -40,6 +40,15 @@ public:
 	void Init(int _channels, int _n_samples) {
 		channels = _channels;
 		n_samples = _n_samples;
+		if (data != nullptr) {
+			for (int i = 0; i < channels; i++) {
+				delete[] data[i];
+			}
+			delete[] data;
+
+			data = nullptr;
+		}
+
 		data = new short* [channels];
 		cur = 0;
 		for (int i = 0; i < channels; i++) {

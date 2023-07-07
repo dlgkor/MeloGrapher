@@ -33,9 +33,11 @@ namespace melo {
 
 		double dMaxSample;
 
+		
+
 	public:
-		BufferWrapper(int _channels, int _p_Sample)
-			: channels(_channels), p_Sample(_p_Sample) {
+		BufferWrapper()
+			: channels(0), p_Sample(0) {
 			dMaxSample = (double)(pow(2, (sizeof(short) * 8) - 1) - 1);
 
 			target_buffer = 0;
@@ -43,16 +45,21 @@ namespace melo {
 			spectrum_cursor = 0;
 			end_buffer = -1;
 
-			for (int i = 0; i < MAX_MELO_BUFFER; i++) {
-				audio_buffer[i].Init(channels, p_Sample);
-				audio_filled[i] = false;
-				spectrum_filled[i] = false;
-			}
-
 			capacitor.InitAudio(channels, 10000);
 
 			for (int i = 0; i < MAX_MELO_BUFFER; i++) {
 				empty_audio_buffer.push(i);
+			}
+		}
+
+		void set_audio_option(int _channels, int _p_Sample) {
+			channels = _channels;
+			p_Sample = _p_Sample;
+
+			for (int i = 0; i < MAX_MELO_BUFFER; i++) {
+				audio_buffer[i].Init(channels, p_Sample);
+				audio_filled[i] = false;
+				spectrum_filled[i] = false;
 			}
 		}
 
@@ -357,8 +364,6 @@ namespace melo {
 				return;
 			}
 
-			//cpx_buffer.back();
-
 			PrintCircularFrequencyWithGDI(p_graphic, spectrum_buffer[target_buffer].data[spectrum_cursor].data, spectrum_option);
 			//display spectrum img
 		}
@@ -376,6 +381,7 @@ namespace melo {
 
 			target_buffer = 0;
 			cursor = 0;
+			spectrum_cursor = 0;
 			end_buffer = -1;
 		}
 
@@ -391,6 +397,10 @@ namespace melo {
 				return true;
 
 			return false;
+		}
+
+		int get_buffer_queue_size() {
+			return empty_audio_buffer.size();
 		}
 
 		~BufferWrapper() {
