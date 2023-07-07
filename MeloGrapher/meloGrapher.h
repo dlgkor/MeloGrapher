@@ -332,6 +332,7 @@ namespace melo {
 			//change cursur
 			//return spectrum img
 
+
 		}
 
 		void clear_all_buffer() {

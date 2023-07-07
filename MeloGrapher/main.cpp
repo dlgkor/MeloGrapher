@@ -59,7 +59,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			return 0;
 
 		if (!melo_player->next_buffer_filled()) {
-			//melo_player->fillBuffer();
 			PostMessage(hWnd, MM_WOM_DONE, 0, 0);
 			return 0;
 		}
