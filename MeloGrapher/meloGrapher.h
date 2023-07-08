@@ -77,12 +77,16 @@ namespace melo {
 			*return audioData which contains block
 			*/
 
-			AudioData* audio_block = new AudioData(channels, blockSize);
-
 			if (target_buffer == end_buffer) {
 				//end of the block
 				return nullptr;
 			}
+
+			if (!audio_filled[target_buffer] || !spectrum_filled[target_buffer]) {
+				return nullptr;
+			}
+
+			AudioData* audio_block = new AudioData(channels, blockSize);
 
 			if (audio_cursor + blockSize > p_Sample) {
 				int block_size1 = p_Sample - audio_cursor;
@@ -131,29 +135,20 @@ namespace melo {
 			return audio_block;
 		}
 
-
-		void fill_empty_buffer(mp3Decoder* target_mp3) {
-			/*
-			*fill buffer if buffer is empty
-			*use audioCapacitor in audiobuffer.h
-			*get audioData from mp3decode in ffmpegWrapper.h
-			*I think filled buffer will be 1 second(44100 sample)
-			*/
+		void fill_empty_buffer(encodedAudio* target_mp3) {
 			while (empty_audio_buffer.size() > 0) {
-
 				int current_target = empty_audio_buffer.front();
-				empty_audio_buffer.pop();
 
 				if (audio_filled[current_target])
 					continue;
 
-				int ref = capacitor.Pull(&audio_buffer[current_target], p_Sample, 0);
+				int ref = capacitor.Pull(&audio_buffer[current_target], p_Sample, 0); //Pull from capacitor
 				if (ref == p_Sample) {
 					audio_filled[current_target] = true;
 					fill_spectrum_buffer(current_target);
 					continue;
 				}
-				//Pull from capacitor
+				
 
 				int missing_size = p_Sample - ref;
 				AudioData* audio = target_mp3->decode_mp3(missing_size);
@@ -170,7 +165,7 @@ namespace melo {
 
 				//get deficient audio data from mp3 decoder
 
-				AudioData remain_audio(channels, 10000);
+				AudioData remain_audio(channels, 1000);
 				int remain_size = audio->n_samples - missing_size;
 				for (int channel = 0; channel < channels; channel++) {
 					for (int j = 0; j < remain_size; j++) {
@@ -184,7 +179,7 @@ namespace melo {
 				delete audio;
 
 				audio_filled[current_target] = true;
-
+				empty_audio_buffer.pop();
 				//activate function check_spectrum continuously
 
 				fill_spectrum_buffer(current_target);
@@ -193,7 +188,7 @@ namespace melo {
 			return;
 		}
 
-		static void fill_buffer_wrapper(BufferWrapper* obj, mp3Decoder* target_mp3) {
+		static void fill_buffer_wrapper(BufferWrapper* obj, encodedAudio* target_mp3) {
 			while (1) {
 				if (obj->music_ended())
 					return;
@@ -206,8 +201,8 @@ namespace melo {
 			int back_buffer = (current_target - 1 + MAX_MELO_BUFFER) % MAX_MELO_BUFFER;
 
 			int b_cur;
-			if (spectrum_buffer[back_buffer].data.size() != 0)
-				b_cur = spectrum_buffer[back_buffer].data.back().s_location + spectrum_option.s_gap;
+			if (spectrum_filled[back_buffer])
+				b_cur = spectrum_buffer[back_buffer].back().s_location + spectrum_option.s_gap;
 			else
 				b_cur = p_Sample + spectrum_option.s_window_half;
 
@@ -216,11 +211,11 @@ namespace melo {
 			for (sample = b_cur;; sample += spectrum_option.s_gap) {
 				if (sample - spectrum_option.s_window_half >= p_Sample)
 					break;
+
 				// FFT
-				// make vector buffer for fft
-				// slice it from audiodata
-				std::vector<cpx> audio_slice;
-				SpectrumImage spectrum_slice;
+
+				std::vector<cpx> audio_slice; // slice it from audiodata
+				SpectrumImage spectrum_slice; // make vector buffer for fft
 
 				int back_start_point = sample - spectrum_option.s_window_half;
 				int back_slice_size = p_Sample - back_start_point;
@@ -241,14 +236,14 @@ namespace melo {
 				spectrum_slice.data = audio_slice;
 				spectrum_slice.s_location = sample;
 
-				spectrum_buffer[back_buffer].data.push_back(spectrum_slice);				
+				spectrum_buffer[back_buffer].push_back(spectrum_slice);				
 			}
 			//set spectrum_filled[back_buffer] to true
-			spectrum_buffer[back_buffer].resetCursor();
+			//spectrum_buffer[back_buffer].resetCursor();
 			spectrum_filled[back_buffer] = true;
 
 			spectrum_filled[current_target] = false;
-			spectrum_buffer[current_target].ClearData();
+			spectrum_buffer[current_target].clear();
 
 			//target_buffer fft
 			sample -= p_Sample;
@@ -271,7 +266,7 @@ namespace melo {
 				spectrum_slice.data = audio_slice;
 				spectrum_slice.s_location = sample; // s_location = sample
 
-				spectrum_buffer[current_target].data.push_back(spectrum_slice);
+				spectrum_buffer[current_target].push_back(spectrum_slice);
 			}			
 		}
 
@@ -285,11 +280,11 @@ namespace melo {
 		}
 
 		void check_current_spectrum() {
-			if (spectrum_buffer[target_buffer].data.size() == 0)
+			if (spectrum_buffer[target_buffer].size() == 0)
 				return;
 
-			if (spectrum_buffer[target_buffer].data[spectrum_cursor].s_location < audio_cursor) {
-				if(spectrum_cursor + 1 < spectrum_buffer[target_buffer].data.size())
+			if (spectrum_buffer[target_buffer].at(spectrum_cursor).s_location < audio_cursor) {
+				if(spectrum_cursor + 1 < spectrum_buffer[target_buffer].size())
 					spectrum_cursor++;
 			}
 		}
@@ -302,7 +297,7 @@ namespace melo {
 				return;
 			}
 
-			PrintCircularFrequencyWithGDI(p_graphic, spectrum_buffer[target_buffer].data[spectrum_cursor].data, spectrum_option);
+			PrintCircularFrequencyWithGDI(p_graphic, spectrum_buffer[target_buffer].at(spectrum_cursor).data, spectrum_option);
 			//display spectrum img
 		}
 
@@ -311,7 +306,8 @@ namespace melo {
 			//activated when cursor is moved from the mp3decoder or object is initiated
 			for (int i = 0; i < MAX_MELO_BUFFER; i++) {
 				audio_buffer[i].ClearData();
-				spectrum_buffer[i].ClearData();
+				//spectrum_buffer[i].ClearData();
+				spectrum_buffer[i].clear();
 
 				audio_filled[i] = false;
 				spectrum_filled[i] = false;

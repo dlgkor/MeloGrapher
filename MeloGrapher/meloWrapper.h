@@ -6,14 +6,14 @@
 namespace melo {
 	class Player {
 	private:
-		mp3Decoder* m_decoder;
+		encodedAudio* encoded_audio;
 		BufferWrapper* m_buffer;
 		W_Sound* w_sound;
 
 		bool music_start;
 	public:
 		Player() {
-			m_decoder = nullptr;
+			encoded_audio = nullptr;
 			m_buffer = nullptr;
 			w_sound = nullptr;
 		}
@@ -23,7 +23,7 @@ namespace melo {
 			spectrum_option.s_gap = 32768 / 16;
 			spectrum_option.s_window = 32768 / 4;
 			spectrum_option.s_window_half = spectrum_option.s_window / 2;
-			spectrum_option.base_frequency = (double)m_decoder->sampleRate / (double)spectrum_option.s_window;
+			spectrum_option.base_frequency = (double)encoded_audio->sampleRate / (double)spectrum_option.s_window;
 
 			spectrum_option.max_out_frequency = 1000;
 			spectrum_option.min_out_frequency = 10;
@@ -36,20 +36,20 @@ namespace melo {
 		}
 
 		void readAudio(const char* filename) {
-			if (m_decoder != nullptr) {
-				delete m_decoder;
+			if (encoded_audio != nullptr) {
+				delete encoded_audio;
 			}
 			if (m_buffer != nullptr) {
 				delete m_buffer;
 			}
 
-			m_decoder = new mp3Decoder(filename);
+			encoded_audio = new encodedAudio(filename);
 
 			m_buffer = new melo::BufferWrapper();
-			m_buffer->set_audio_option(m_decoder->channels, 44100);
+			m_buffer->set_audio_option(encoded_audio->channels, 44100);
 		}
 		void setWaveOut(void* notify_function) {
-			w_sound = new W_Sound(m_decoder->sampleRate);
+			w_sound = new W_Sound(encoded_audio);
 			w_sound->OpenDevice(notify_function);
 			music_start = false;
 		}
@@ -65,23 +65,24 @@ namespace melo {
 			}
 			delete[] buffer;
 
-			std::thread f_thread(&BufferWrapper::fill_buffer_wrapper, m_buffer, m_decoder);
-			f_thread.detach();
+			std::thread buffer_thread(&BufferWrapper::fill_buffer_wrapper, m_buffer, encoded_audio);
+			buffer_thread.detach();
 
 			music_start = true;
 		}
 
-		void WriteWaveBuffer() {
+		int WriteWaveBuffer() {
 			AudioData* data = m_buffer->display_block(w_sound->GetBlockSamples());
 
 			if (data == nullptr) {
-				music_start = false;
-				return;
+				if(!m_buffer->music_ended())
+					music_start = false;
+				return -1;
 			}
 
 			w_sound->WriteWaveBuffer(&data->data[0][0]);
 			delete data;
-			return;
+			return 0;
 		}
 
 		void checkSpectrum() {
@@ -109,8 +110,8 @@ namespace melo {
 			w_sound->CloseDeivce();
 
 
-			if (m_decoder != nullptr) {
-				delete m_decoder;
+			if (encoded_audio != nullptr) {
+				delete encoded_audio;
 			}
 			if (m_buffer != nullptr) {
 				delete m_buffer;

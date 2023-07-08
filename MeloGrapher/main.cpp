@@ -113,12 +113,10 @@ void waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwParam1, DWORD dwParam2)
 	if (uMsg != WOM_DONE) return;
 	//s_buffer->fill_buffer(s_decoder);
 	
-	if (!melo_player->is_muisc_start())
-		return;
+	//if (!melo_player->is_muisc_start())
+		//return;
 
-	while (!melo_player->next_buffer_filled());
-
-	melo_player->WriteWaveBuffer();
+	while(melo_player->WriteWaveBuffer() == -1);
 	return;
 }
 

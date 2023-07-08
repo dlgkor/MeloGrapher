@@ -7,13 +7,13 @@ extern "C" {
 
 #include"audioUtils.h"
 
-class mp3Decoder {
+class encodedAudio {
 public:
 	AVFormatContext* formatcontext;
 	AVCodecContext* codecContext;
 	AVPacket* packet;
 	AVFrame* frame;
-	int ASI;
+	int ASI; // audio stream information
 	const AVCodec* codec;
 
 	int channels;
@@ -21,7 +21,7 @@ public:
 	int duration;
 	int number_of_samples;
 
-	double dMaxSample; //그 값을 double로 형변환
+	double dMaxSample;
 
 	double clip(double dSample, double dMax)
 	{
@@ -31,8 +31,9 @@ public:
 			return fmax(dSample, -dMax);
 	}
 public:
-	mp3Decoder(const char* filename) {
+	encodedAudio(const char* filename) {
 		avformat_network_init();
+
 		formatcontext = nullptr;
 		codecContext = nullptr;
 		packet = nullptr;
@@ -51,8 +52,6 @@ public:
 			return;
 		}
 
-		av_dump_format(formatcontext, 0, filename, 0); //print format information
-
 		ASI = av_find_best_stream(formatcontext, AVMEDIA_TYPE_AUDIO, -1, NULL, NULL, 0); //find best audio stream key value
 		codecContext = avcodec_alloc_context3(nullptr);
 		if (codecContext == nullptr) {
@@ -62,7 +61,6 @@ public:
 		avcodec_parameters_to_context(codecContext, formatcontext->streams[ASI]->codecpar);
 
 		codec = avcodec_find_decoder(codecContext->codec_id);
-		//recent version ffmpeg changed avcodec to be declared constant
 
 		if (codec == nullptr) {
 			//std::cout << "cannot find codec" << std::endl;
@@ -89,32 +87,37 @@ public:
 		const AVSampleFormat sampleFormat = static_cast<AVSampleFormat>(frame->format);
 
 		//planar audio uses extended_data
-		for (int channel = 0; channel < channels; ++channel) {
-			if (sampleFormat == AV_SAMPLE_FMT_FLTP) {
+
+		if (sampleFormat == AV_SAMPLE_FMT_FLTP) {
+			for (int channel = 0; channel < channels; ++channel) {
 				for (int sample = 0; sample < samples; ++sample) {
 					const float amplitude = *reinterpret_cast<const float*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
 					audio->data[channel][audio_cursor + sample] = (short)(clip((double)amplitude, 1.0) * dMaxSample);
 				}
 			}
-			else if (sampleFormat == AV_SAMPLE_FMT_DBLP) {
+		}
+		else if (sampleFormat == AV_SAMPLE_FMT_DBLP) {
+			for (int channel = 0; channel < channels; ++channel) {
 				for (int sample = 0; sample < samples; ++sample) {
 					const double amplitude = *reinterpret_cast<const double*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
 					audio->data[channel][audio_cursor + sample] = (short)(clip(amplitude, 1.0) * dMaxSample);
 				}
 			}
-			else if (sampleFormat == AV_SAMPLE_FMT_S16P) {
+		}
+		else if (sampleFormat == AV_SAMPLE_FMT_S16P) {
+			for (int channel = 0; channel < channels; ++channel) {
 				for (int sample = 0; sample < samples; ++sample) {
 					const short amplitude = *reinterpret_cast<const short*>(data[channel] + sample * av_get_bytes_per_sample(sampleFormat));
 					audio->data[channel][audio_cursor + sample] = amplitude;
 				}
 			}
-			else {
-				//unsupported format
-				return -1;
-			}
+		}
+		else {
+			//unsupported format
+			return 0;
 		}
 
-		return 0;
+		return samples;
 	}
 
 	AudioData* decode_mp3(int n_sample) {
@@ -134,9 +137,7 @@ public:
 					//std::cout << "avcodec send packet failed" << std::endl;
 				}
 				while (avcodec_receive_frame(codecContext, frame) >= 0) {
-					get_audiodata(frame, audio, audio_cursor);
-					
-					audio_cursor += frame->nb_samples;
+					audio_cursor += get_audiodata(frame, audio, audio_cursor);
 				}
 			}
 
@@ -160,9 +161,7 @@ public:
 					//std::cout << "avcodec send packet failed" << std::endl;
 				}
 				while (avcodec_receive_frame(codecContext, frame) >= 0) {
-					get_audiodata(frame, audio, audio_cursor);
-
-					audio_cursor += frame->nb_samples;
+					audio_cursor += get_audiodata(frame, audio, audio_cursor);
 				}
 			}
 
@@ -176,7 +175,7 @@ public:
 		return audio;
 	}
 
-	~mp3Decoder() {
+	~encodedAudio() {
 		av_frame_free(&frame);
 		av_packet_free(&packet);
 

@@ -38,6 +38,9 @@ namespace melo {
 		int s_location; //location relative to one audio data buffer
 	};
 
+	typedef std::vector<SpectrumImage> SpectrumVideo;
+
+	/*
 	class SpectrumVideo {
 	public:
 		std::vector<SpectrumImage> data;
@@ -54,4 +57,5 @@ namespace melo {
 			resetCursor();
 		}
 	};
+	*/
 }

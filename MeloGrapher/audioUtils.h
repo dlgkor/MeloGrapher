@@ -66,7 +66,6 @@ public:
 		for (int i = 0; i < channels; i++) {
 			data[i] = new short[n_samples];
 		}
-
 	}
 
 	void ClearData() {
@@ -97,15 +96,23 @@ private:
 	AudioData* audio;
 	int cur;
 	int remain;
+
+	int channels;
+	int n_maxSample;
 public:
 	audioCapacitor() {
 		cur = 0;
 		remain = 0;
 		audio = nullptr;
+		channels = 0;
+		n_maxSample = 0;
 	}
-	void InitAudio(int channels, int n_maxSample) {
+	void InitAudio(int _channels, int _n_maxSample) {
 		if (audio != nullptr)
 			delete audio;
+
+		channels = _channels;
+		n_maxSample = _n_maxSample;
 
 		audio = new AudioData(channels, n_maxSample);
 	}
@@ -115,9 +122,9 @@ public:
 			return -1;
 		}
 
-		for (int channel = 0; channel < audio->channels; channel++) {
+		for (int channel = 0; channel < channels; channel++) {
 			for (int i = 0; i < d_size; i++) {
-				audio->data[channel][(cur + remain + i) % audio->n_samples] = start.data[channel][i];
+				audio->data[channel][(cur + remain + i) % n_maxSample] = start.data[channel][i];
 			}
 		}
 		remain += d_size;
@@ -125,15 +132,13 @@ public:
 	int Pull(AudioData* p_Data, int d_size, int read_cursor) {
 		int pull_size = min(remain, d_size);
 
-		for (int channel = 0; channel < audio->channels; channel++) {
+		for (int channel = 0; channel < channels; channel++) {
 			for (int sample = 0; sample < pull_size; sample++) {
-				short _data = audio->data[channel][(cur + sample) % audio->n_samples];
-				p_Data->data[channel][read_cursor + sample] = _data;
+				p_Data->data[channel][read_cursor + sample] = audio->data[channel][(cur + sample) % n_maxSample];
 			}
 		}
-
 		//p_Data->cur += pull_size;
-		cur = (cur + pull_size) % audio->n_samples;
+		cur = (cur + pull_size) % n_maxSample;
 		remain -= pull_size;
 
 		return pull_size;
