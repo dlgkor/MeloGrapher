@@ -233,7 +233,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 		menu.ResetMenu(hWnd);
 
-		SetTimer(hWnd, 1, 20, NULL);
+		SetTimer(hWnd, 1, 10, NULL);
 		return 0;
 	case MM_WOM_DONE:
 		if (!PInfo.Play)
