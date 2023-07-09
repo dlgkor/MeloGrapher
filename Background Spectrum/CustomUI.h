@@ -23,7 +23,7 @@ namespace CustomUI {
 		}
 
 		vector2d UnitVector() {
-			//´ÜÀ§º¤ÅÍ¸¦ ¹İÈ¯ÇÑ´Ù
+			//ë‹¨ìœ„ë²¡í„°ë¥¼ ë°˜í™˜í•œë‹¤
 			return vector2d(x / Size(), y / Size());
 		}
 
@@ -226,165 +226,6 @@ namespace CustomUI {
 		Plane plane[3];
 	};
 
-	/*
-	enum CubePlane {
-		PLANE1 = 0, PLANE2, PLANE3, DEFUALT, NONE
-	};
-	*/
-	/*
-	class Cube {
-	public:
-		vector2d p[6];
-		vector2d center;
-		//normal vector
-	public:
-
-		bool IsInsideLine(vector2d normalv, vector2d point) {
-			if (normalv.dot(point) < 0)
-				return true;
-
-			return false;
-		}
-
-		bool WhichPlane(int plane, vector2d mousepos) {
-			//¾î´À Æò¸é ¾È¿¡ ¸¶¿ì½º°¡ À§Ä¡ÇÏ´ÂÁö ¹İÈ¯
-			//plane 0,1,2
-			vector2d normalline;
-			matrix2x2 rotation;
-			rotation.m[0][0] = 0;
-			rotation.m[0][1] = 1;
-			rotation.m[1][0] = -1;
-			rotation.m[1][1] = 0;
-
-			normalline = (p[(plane * 2 + 1)%6] - p[(plane * 2)%6]) * rotation;
-			if (!IsInsideLine(normalline, mousepos))
-					return false;
-			normalline = (p[(plane * 2 + 2) % 6] - p[(plane * 2 + 1) % 6]) * rotation;
-			if (!IsInsideLine(normalline, mousepos))
-				return false;
-
-			normalline = (center - p[(plane * 2 + 2) % 6]) * rotation;
-			if (!IsInsideLine(normalline, mousepos))
-				return false;
-
-			normalline = (p[(plane * 2) % 6] - center) * rotation;
-			if (!IsInsideLine(normalline, mousepos))
-				return false;
-
-			return true;
-		}
-
-		void Render(HDC hdc) {
-			MoveToEx(hdc, p[5].x, p[5].y, 0);
-			for (int i = 0; i < 5; i++) {
-				LineTo(hdc, p[i].x, p[i].y);
-			}
-
-			for (int i = 0; i < 3; i++) {
-				MoveToEx(hdc, center.x, center.y, 0);
-				LineTo(hdc, p[i * 2].x, p[i * 2].y);
-			}
-		}
-
-	};
-	*/
-	/*
-	class Menu {
-	private:
-		float PlaneSize;
-		Cube defaultCube;
-		Cube Plane[3];
-		Cube CurrentCube;
-		CubePlane CurrentState;
-		CubePlane NextState;
-		Button btnList[10];
-		float transitionTime;
-	public:
-		Menu() {
-			PlaneSize = 50.0f;
-
-			CurrentState = DEFUALT;
-			NextState = NONE;
-
-			transitionTime = 1.0f;
-
-			defaultCube.center = { 0,0 };
-			defaultCube.p[0] = { 0,PlaneSize };
-			defaultCube.p[1] = { PlaneSize * 2 * float(sqrt(3)),PlaneSize / 2 };
-			defaultCube.p[2] = { PlaneSize * 2 * float(sqrt(3)),-PlaneSize / 2 };
-			defaultCube.p[3] = { 0,-PlaneSize };
-			defaultCube.p[4] = { -PlaneSize * 2 * float(sqrt(3)),-PlaneSize / 2 };
-			defaultCube.p[5] = { -PlaneSize * 2 * float(sqrt(3)), PlaneSize / 2 };
-
-
-
-			//need to set PlaneCube
-
-			CurrentCube = defaultCube;
-		}
-
-		CubePlane DetectMouse(vector2d mousepos) {
-			//need to change mouse xy center to {0,0}
-			if (CurrentState != DEFUALT) {
-				if (CurrentCube.WhichPlane(CurrentState, mousepos))
-					return DEFUALT;
-
-				return NONE; //no change
-			}
-
-			if (CurrentCube.WhichPlane(PLANE1, mousepos))
-				return PLANE1;
-			if (CurrentCube.WhichPlane(PLANE2, mousepos))
-				return PLANE2;
-			if (CurrentCube.WhichPlane(PLANE3, mousepos))
-				return PLANE3;
-
-			return NONE;
-		}
-
-		void TransitionAnimation(CubePlane current, CubePlane next, float deltaT) {
-			//if transition ends >> nextstate = none
-			//if transition is cancled >> currentcube go back to currenstate cube
-		}
-
-		void Update(vector2d mousepos, bool clicked) {
-			//triggered when mouse move,click
-
-			if (!clicked) {
-				NextState = DetectMouse(mousepos);
-				if (NextState == CurrentState) {
-					NextState = NONE;
-				}
-
-				//¹öÆ°°³¼ö ³ªÁß¿¡ ¼öÁ¤ÇÊ¿ä
-				for (int i = 0; i < 10; i++) {
-					btnList[i].isHighlight(mousepos);
-				}
-			}
-
-			for (int i = 0; i < 10; i++) {
-				btnList[i].Click(mousepos);
-			}
-		}
-
-		void Render(HDC hdc, float deltaT) {
-			//triggered when wm_paint
-
-			if (NextState != NONE) {
-				TransitionAnimation(CurrentState, NextState, deltaT);
-			}
-
-			CurrentCube.Render(hdc);
-
-
-			for (int i = 0; i < 10; i++) {
-				btnList[i].Render(hdc);
-			}
-
-		}
-	};
-	*/
-
 	enum PlaneState {
 		DEFUALT = 0, PLANE1 = 1, PLANE2 = 2, PLANE3 = 3,  NONE
 	};
@@ -416,7 +257,7 @@ namespace CustomUI {
 			CurrentState = DEFUALT;
 			NextState = NONE;
 
-			transitionTime = 0.11f;
+			transitionTime = 0.25f;
 			accumulatedTime = 0.0f;
 			targetChange = false;
 			animationOn = false;
@@ -502,9 +343,9 @@ namespace CustomUI {
 		}
 
 		void ResetMenu(HWND hwnd) {
-			btnlist.push_back(Button(vector2d(-PlaneSize * 0.9, 0), vector2d(-PlaneSize * 0.1, PlaneSize*0.5), L"ÀĞ¾î¿À±â", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 10));
-			btnlist.push_back(Button(vector2d(PlaneSize*0.1, 0), vector2d(PlaneSize*0.9, PlaneSize*0.5), L"ÇÃ·¹ÀÌ/Á¤Áö", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 11));
-			btnlist.push_back(Button(vector2d(-PlaneSize*0.5, -PlaneSize*0.5), vector2d(PlaneSize*0.5, PlaneSize*0.5), L"Á¾·á", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 13));
+			btnlist.push_back(Button(vector2d(-PlaneSize * 0.9, 0), vector2d(-PlaneSize * 0.1, PlaneSize*0.5), L"ì½ì–´ì˜¤ê¸°", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 10));
+			btnlist.push_back(Button(vector2d(PlaneSize*0.1, 0), vector2d(PlaneSize*0.9, PlaneSize*0.5), L"í”Œë ˆì´/ì •ì§€", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 11));
+			btnlist.push_back(Button(vector2d(-PlaneSize*0.5, -PlaneSize*0.5), vector2d(PlaneSize*0.5, PlaneSize*0.5), L"ì¢…ë£Œ", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 13));
 			
 		}
 
@@ -538,8 +379,9 @@ namespace CustomUI {
 				animationOn = true;
 			}
 
-			if (accumulatedTime >= transitionTime && animationOn) {
-				//if arrived
+			if (accumulatedTime + deltaT >= transitionTime && animationOn) {
+				//check if it will arive after deltaT
+
 				switch (CurrentState)
 				{
 				case CustomUI::DEFUALT:
@@ -619,7 +461,7 @@ namespace CustomUI {
 				return;
 			}
 
-			//¹öÆ°°³¼ö ³ªÁß¿¡ ¼öÁ¤ÇÊ¿ä
+			//ë²„íŠ¼ê°œìˆ˜ ë‚˜ì¤‘ì— ìˆ˜ì •í•„ìš”
 
 			for (int i = 0; i < btnlist.size(); i++) {
 				btnlist.at(i).isHighlight(mousepos);
@@ -647,31 +489,4 @@ namespace CustomUI {
 			
 		}
 	};
-
-	/*
-	class Cube {
-	public:
-		vector2d p[6];
-		vector2d center;
-	};
-	*/
-	/*
-	class Menu {
-	private:
-		int buttonCount;
-		Button blist[10];
-	public:
-		Menu() {
-			blist[0].Set(vector2d(-30, 0), vector2d(0, 30), L"Button");
-			blist[0].SetActive(true);
-
-			buttonCount = 1;
-		}
-		void Render(HDC hdc) {
-			for (int i = 0; i < buttonCount; i++) {
-				blist[i].Render(hdc);
-			}
-		}
-	};
-	*/
 }
