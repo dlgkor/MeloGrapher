@@ -221,6 +221,12 @@ int BufferManager::fill_audio_block(int target_cursor, EncodedAudio* encoded_aud
 
 
 int BufferManager::check_spectrum_block() {
+	//check spectrum block and notify
+	if (spectrum_on == false)
+		return -1;
+
+	std::unique_lock<std::mutex> lock(spectrum_mutex);
+
 	std::cout << "checking spectrum buffer" << std::endl;
 
 	int audio_cursor_copy = 0;
@@ -234,8 +240,11 @@ int BufferManager::check_spectrum_block() {
 
 	int next_spectrum_cursor = (spectrum_cursor + 1) % MAX_SPECTRUM_BLOCK;
 
-	if (next_spectrum_cursor == spectrum_end_cursor)
+	if (next_spectrum_cursor == spectrum_end_cursor) {
+		spectrum_on = false;
+		spectrum_block_cv.notify_one();
 		return -1;
+	}
 
 	int next_spectrum_target_buffer = spectrum_block[next_spectrum_cursor].get_target_buffer();
 	int next_spectrum_sample_cursor = spectrum_block[next_spectrum_cursor].get_target_sample();
@@ -269,12 +278,6 @@ int BufferManager::get_spectrum_block(SpectrumBlock* spectrum_block_repos) {
 		return  -1;
 
 	std::unique_lock<std::mutex> lock(spectrum_mutex);
-
-	//check spectrum block and notify
-	if (check_spectrum_block() == -1) {
-		spectrum_on = false;
-		return -1;
-	}
 
 	*spectrum_block_repos = spectrum_block[spectrum_cursor]; //return copy of current spectrum_block instance
 

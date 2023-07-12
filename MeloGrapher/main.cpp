@@ -79,9 +79,10 @@ void paintFunction(HWND hWnd, HDC hdc, BlockWrapper* final_wrapper) {
 		spectrum_option.radius = 200;
 
 		SpectrumBlock* spectrum_instance = new SpectrumBlock();
+		final_wrapper->buffer_manager.check_spectrum_block();
 		if (final_wrapper->buffer_manager.get_spectrum_block(spectrum_instance) != -1) {
-			melo::PrintCircularFrequencyWithGDI(p_graphic, spectrum_instance, spectrum_option);
 			//get current spectrum data
+			melo::PrintCircularFrequencyWithGDI(p_graphic, spectrum_instance, spectrum_option);
 		}
 		delete spectrum_instance;
 	}
