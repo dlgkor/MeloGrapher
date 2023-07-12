@@ -16,14 +16,17 @@
     <Filter Include="헤더 파일\spectrum_GUI">
       <UniqueIdentifier>{d01b119e-07e1-4964-8eb0-706a116241a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Block_FEATURE">
-      <UniqueIdentifier>{76316d4e-50c9-49a0-80da-60ed3c8c13c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\ui_GUI">
       <UniqueIdentifier>{2c610f10-612b-447a-8381-03f06e9d642c}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\WRAPPER">
       <UniqueIdentifier>{9f49f10c-031c-4700-9a64-908e4881e6e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\window_FEATURE">
+      <UniqueIdentifier>{d57df888-63dd-4bbe-ae46-627faa130eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\block_FEATURE">
+      <UniqueIdentifier>{76316d4e-50c9-49a0-80da-60ed3c8c13c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,13 +39,13 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="BufferManager.h">
-      <Filter>헤더 파일\Block_FEATURE</Filter>
+      <Filter>헤더 파일\block_FEATURE</Filter>
     </ClInclude>
     <ClInclude Include="DataStruct.h">
-      <Filter>헤더 파일\Block_FEATURE</Filter>
+      <Filter>헤더 파일\block_FEATURE</Filter>
     </ClInclude>
     <ClInclude Include="WaveOut.h">
-      <Filter>헤더 파일\Block_FEATURE</Filter>
+      <Filter>헤더 파일\block_FEATURE</Filter>
     </ClInclude>
     <ClInclude Include="displaySpectrum.h">
       <Filter>헤더 파일\spectrum_GUI</Filter>
@@ -64,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomWindow.h">
+      <Filter>헤더 파일\window_FEATURE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

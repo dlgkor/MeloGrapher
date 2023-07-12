@@ -20,8 +20,7 @@ namespace melo {
 
 		int n_graph;
 
-		double lenght;
-		//plane width if line spectrum. circle round if circular spectrum
+		double lenght; //plane width if line spectrum. circle round if circular spectrum
 
 		//line spectrum
 		vector2d s_point;
@@ -30,5 +29,29 @@ namespace melo {
 		//circular spectrum
 		vector2d r_center;
 		double radius;
+	public:
+		SpectrumOption();
+		int load(const char* filename);
+		int save(const char* filename);
+		~SpectrumOption();
 	};
+}
+
+
+melo::SpectrumOption::SpectrumOption() {
+
+}
+
+int melo::SpectrumOption::load(const char* filename) {
+	//load audio spectrum option
+	return 0;
+}
+
+int melo::SpectrumOption::save(const char* filename) {
+	//save audio spectrum option
+	return 0;
+}
+
+melo::SpectrumOption::~SpectrumOption() {
+
 }

@@ -1,103 +1,73 @@
 #pragma once
-#include<Windows.h>
-#include"resource.h"
+#include"CommonHeader.h"
+#include"CustomWindow.h"
+#include"BlockWrapper.h"
+#include"displaySpectrum.h"
 
-class CustomWindow {
-private:
-	int screenWidth, screenHeight;
-	int locationX, locationY;
-	HWND w_hWnd;
+#define MAX_CHILD_WINDOW 5
 
-	HDC w_hdc, w_hMemDC;
-	PAINTSTRUCT w_ps;
+LRESULT CALLBACK WndProc_Hidden(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
-	HBITMAP w_hbit, w_oldbit;
-public:
-	CustomWindow();
-	void setScreenSize(int _sizeW, int _sizeH); //update screen size
-	void SetScreenLocation(int _locateX, int _locateY); //update screen location
-	void Apply();
-	HWND CreateCustomWindow(HINSTANCE hInstance, WNDPROC WndProc, LPCWSTR lpszClass);
-	~CustomWindow();
+LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
-	void DrawBitmap(HDC hdc, int x, int y, HBITMAP hBit);
+struct MeloWndData {
+	BlockWrapper* block_wrapper;
+	CustomWindow* this_window;
 };
 
-void CustomWindow::DrawBitmap(HDC hdc, int x, int y, HBITMAP hBit) {
-	HDC MemDC;
-	HBITMAP OldBitmap;
-	int bx, by;
-	BITMAP bit;
-
-	MemDC = CreateCompatibleDC(hdc);
-	OldBitmap = (HBITMAP)SelectObject(MemDC, hBit);
-
-	GetObject(hBit, sizeof(BITMAP), &bit);
-	bx = bit.bmWidth;
-	by = bit.bmHeight;
-
-	BitBlt(hdc, x, y, bx, by, MemDC, 0, 0, SRCCOPY);
-
-	SelectObject(MemDC, OldBitmap);
-	DeleteDC(MemDC);
-}
-
-CustomWindow::CustomWindow() {
-	screenWidth = CW_USEDEFAULT; screenHeight = CW_USEDEFAULT;
-	locationX = CW_USEDEFAULT; locationY = CW_USEDEFAULT;
+class MeloWindow {
+public:
+	BlockWrapper block_wrapper; //block calculator	
 	
-	w_hWnd = NULL;
-	w_hbit = NULL;
+	HWND father_wnd; //hidden father window. show by tray icon
+
+	CustomWindow child_window[MAX_CHILD_WINDOW]; //custom child window
+	MeloWndData melo_wnd_data[MAX_CHILD_WINDOW]; //data for setlongptr
+	int count_child_window;
+
+
+public:
+	MeloWindow();
+	int create_melo_child(); //create child window
+	~MeloWindow();
+};
+
+LRESULT CALLBACK WndProc_Hidden(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+	HDC hdc;
+	PAINTSTRUCT ps;
+
+	switch (iMessage) {
+	case WM_CREATE:
+		return 0;
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
+		EndPaint(hWnd, &ps);
+		return 0;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	}
+	return(DefWindowProc(hWnd, iMessage, wParam, lParam));
 }
 
-void CustomWindow::setScreenSize(int _sizeW, int _sizeH) {
-	screenWidth = _sizeW;
-	screenHeight = _sizeH;
-	
-}
+LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+	//SetWindowLongPtr from wndmain or MeloWindow class
+	//GetWindowLongPtr from here
+	//get speciic pointer by handle data
 
-void CustomWindow::SetScreenLocation(int _locateX, int _locateY) {
-	locationX = _locateX;
-	locationY = _locateY;
+	HDC hdc;
+	PAINTSTRUCT ps;
 
-}
-
-void CustomWindow::Apply() {
-	//apply and show change window
-	MoveWindow(w_hWnd, locationX, locationY, screenWidth, screenHeight, TRUE);
-	if (w_hbit)
-		DeleteObject(w_hbit);
-
-	w_hdc = GetDC(w_hWnd);
-	w_hbit = CreateCompatibleBitmap(w_hdc, screenWidth, screenHeight);
-	ReleaseDC(w_hWnd, w_hdc);
-}
-
-HWND CustomWindow::CreateCustomWindow(HINSTANCE hInstance, WNDPROC WndProc, LPCWSTR lpszClass) {
-	WNDCLASS WndClass;
-
-	WndClass.cbClsExtra = 0;
-	WndClass.cbWndExtra = 0;
-	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	//WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	WndClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(MAIN_ICON));
-	WndClass.hInstance = hInstance;
-	WndClass.lpfnWndProc = WndProc;
-	WndClass.lpszClassName = lpszClass;
-	WndClass.lpszMenuName = NULL;
-	WndClass.style = CS_HREDRAW | CS_VREDRAW;
-	RegisterClass(&WndClass);
-
-	w_hWnd = CreateWindow(lpszClass, lpszClass, WS_OVERLAPPEDWINDOW,
-		locationX, locationY, screenWidth, screenHeight,
-		NULL, (HMENU)NULL, hInstance, NULL);
-
-	return w_hWnd;
-}
-
-
-CustomWindow::~CustomWindow() {
-	if (w_hbit)
-		DeleteObject(w_hbit);
+	switch (iMessage) {
+	case WM_CREATE:
+		return 0;
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
+		EndPaint(hWnd, &ps);
+		return 0;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	}
+	return(DefWindowProc(hWnd, iMessage, wParam, lParam));
 }

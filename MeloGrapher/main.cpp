@@ -1,8 +1,5 @@
 #include"CommonHeader.h"
-#include"BlockWrapper.h"
 #include"WindowWrapper.h"
-#include"displaySpectrum.h"
-//#include"spectrumUtils.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
@@ -10,25 +7,6 @@ HWND hWndMain;
 LPCTSTR lpszClass = TEXT("MeloGrapher");
 
 HBITMAP hbit;
-
-void DrawBitmap(HDC hdc, int x, int y, HBITMAP hBit) {
-	HDC MemDC;
-	HBITMAP OldBitmap;
-	int bx, by;
-	BITMAP bit;
-
-	MemDC = CreateCompatibleDC(hdc);
-	OldBitmap = (HBITMAP)SelectObject(MemDC, hBit);
-
-	GetObject(hBit, sizeof(BITMAP), &bit);
-	bx = bit.bmWidth;
-	by = bit.bmHeight;
-
-	BitBlt(hdc, x, y, bx, by, MemDC, 0, 0, SRCCOPY);
-
-	SelectObject(MemDC, OldBitmap);
-	DeleteDC(MemDC);
-}
 
 CustomWindow custom_window;
 
@@ -112,7 +90,7 @@ void paintFunction(HWND hWnd, HDC hdc, BlockWrapper* final_wrapper) {
 
 	SelectObject(hMemDC, OldBit);
 	DeleteDC(hMemDC);
-	if (hbit) DrawBitmap(hdc, 0, 0, hbit); //hbit을 hdc를 이용해 출력
+	if (hbit) CustomWindow::DrawBitmap(hdc, 0, 0, hbit); //hbit을 hdc를 이용해 출력
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {

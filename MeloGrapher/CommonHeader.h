@@ -1,6 +1,8 @@
 #pragma once
 
 #include<Windows.h>
+#include"resource.h"
+
 #include<gdiplus.h>
 #pragma comment(lib, "gdiplus")
 

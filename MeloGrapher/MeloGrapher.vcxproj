@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="CommonHeader.h" />
+    <ClInclude Include="CustomWindow.h" />
     <ClInclude Include="DataStruct.h" />
     <ClInclude Include="displaySpectrum.h" />
     <ClInclude Include="FFmpegWrapper.h" />
