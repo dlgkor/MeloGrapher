@@ -19,11 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resource.rc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -33,10 +28,17 @@
     <ClInclude Include="displaySpectrum.h" />
     <ClInclude Include="FFmpegWrapper.h" />
     <ClInclude Include="BlockWrapper.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="spectrumUtils.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="WaveOut.h" />
     <ClInclude Include="WindowWrapper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MeloGrapher.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resource_folder\program_icon.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

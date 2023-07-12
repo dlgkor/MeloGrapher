@@ -1,5 +1,6 @@
 #pragma once
 #include<Windows.h>
+#include"resource.h"
 
 class CustomWindow {
 private:
@@ -79,7 +80,8 @@ HWND CustomWindow::CreateCustomWindow(HINSTANCE hInstance, WNDPROC WndProc, LPCW
 	WndClass.cbWndExtra = 0;
 	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	//WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	WndClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(MAIN_ICON));
 	WndClass.hInstance = hInstance;
 	WndClass.lpfnWndProc = WndProc;
 	WndClass.lpszClassName = lpszClass;

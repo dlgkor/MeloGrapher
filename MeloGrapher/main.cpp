@@ -33,9 +33,9 @@ void DrawBitmap(HDC hdc, int x, int y, HBITMAP hBit) {
 CustomWindow custom_window;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
+	
 	ULONG_PTR gpToken;
 	Gdiplus::GdiplusStartupInput gpsi;
-
 	if (GdiplusStartup(&gpToken, &gpsi, NULL) != Gdiplus::Ok) return 0;
 
 	HWND hWnd;
@@ -43,38 +43,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 
 	custom_window.setScreenSize(700, 700);
 	hWnd = custom_window.CreateCustomWindow(hInstance, WndProc, lpszClass);
-
-	/*
-	WNDCLASS WndClass;
-	g_hInst = hInstance;
-
-	
-
-	WndClass.cbClsExtra = 0;
-	WndClass.cbWndExtra = 0;
-	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	WndClass.hInstance = hInstance;
-	WndClass.lpfnWndProc = WndProc;
-	WndClass.lpszClassName = lpszClass;
-	WndClass.lpszMenuName = NULL;
-	WndClass.style = CS_HREDRAW | CS_VREDRAW;
-	RegisterClass(&WndClass);
-
-	hWnd = CreateWindow(lpszClass, lpszClass, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 700, 700,
-		NULL, (HMENU)NULL, hInstance, NULL);
-	*/
-
 	ShowWindow(hWnd, nCmdShow);
 
 	while (GetMessage(&Message, NULL, 0, 0)) {
 		TranslateMessage(&Message);
 		DispatchMessage(&Message);
 	}
-
-	
 	Gdiplus::GdiplusShutdown(gpToken);
 
 	return (int)Message.wParam;
