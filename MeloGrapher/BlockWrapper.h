@@ -17,6 +17,7 @@ public:
 	void close_file();
 	void fill_audio_thread();
 	void fill_spectrum_thread();
+	void fill_thread();
 	void play_file();
 	void seek(int64_t pos);
 
@@ -69,6 +70,12 @@ void BlockWrapper::fill_spectrum_thread() {
 }
 
 void BlockWrapper::close_file() {
+	buffer_manager.spectrum_off();
+	buffer_manager.audio_off();
+
+	std::chrono::milliseconds delayTime(100); //100ms delay
+	std::this_thread::sleep_for(delayTime); //delay for audio to be unprepared
+
 	if (encoded_audio != nullptr) {
 		encoded_audio->close();
 		delete encoded_audio;
@@ -78,12 +85,6 @@ void BlockWrapper::close_file() {
 		wave_out->close_device();
 		delete wave_out;
 	}
-
-	buffer_manager.spectrum_off();
-	buffer_manager.audio_off();
-
-	std::chrono::milliseconds delayTime(100); //100ms delay
-	std::this_thread::sleep_for(delayTime); //delay for audio to be unprepared
 }
 
 void BlockWrapper::play_file() {
@@ -99,20 +100,22 @@ void BlockWrapper::play_file() {
 	delete[] zero_sound;
 }
 
+void BlockWrapper::fill_thread() {
+	buffer_manager.reset_block();
+	fill_audio_thread();
+	fill_spectrum_thread();
+}
+
 void BlockWrapper::seek(int64_t pos) {
 	buffer_manager.spectrum_off();
 	buffer_manager.audio_off();
-
 	// move cursor
 	encoded_audio->seek(pos);
 
-	buffer_manager.reset_block();
+	std::chrono::milliseconds delayTime(100); //100ms delay
+	std::this_thread::sleep_for(delayTime); //delay for audio to be unprepared
 
-	std::chrono::milliseconds delayTime(100); // 1밀리초의 지연 시간
-	std::this_thread::sleep_for(delayTime); // 1밀리초 지연
-
-	fill_audio_thread();
-	fill_spectrum_thread();
+	fill_thread();
 }
 
 BlockWrapper::~BlockWrapper() {

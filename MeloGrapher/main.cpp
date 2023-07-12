@@ -98,7 +98,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	PAINTSTRUCT ps;
 
-	const char* filename = "C:/Users/ydhan/dlg project/test/ffmpegtest/test.mp3";
+	//const char* filename = "C:/Users/ydhan/dlg project/test/ffmpegtest/test.mp3";
+	const char* filename = "C:/Users/ydhan/dlg project/mp3/Hit the Floor.mp3";
+	
 	static BlockWrapper final_wrapper;
 
 	switch (iMessage) {
@@ -110,9 +112,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONDOWN:
 		final_wrapper.open_file(filename);
-		final_wrapper.fill_audio_thread();
-		final_wrapper.fill_spectrum_thread();
-
+		final_wrapper.fill_thread();
+		final_wrapper.play_file();
+		return 0;
+	case WM_RBUTTONDOWN:
+		final_wrapper.seek(0);
+		final_wrapper.fill_thread();
 		final_wrapper.play_file();
 		return 0;
 	case WM_TIMER:
