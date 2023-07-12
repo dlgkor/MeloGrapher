@@ -78,6 +78,12 @@ void BlockWrapper::close_file() {
 		wave_out->close_device();
 		delete wave_out;
 	}
+
+	buffer_manager.spectrum_off();
+	buffer_manager.audio_off();
+
+	std::chrono::milliseconds delayTime(100); //100ms delay
+	std::this_thread::sleep_for(delayTime); //delay for audio to be unprepared
 }
 
 void BlockWrapper::play_file() {
