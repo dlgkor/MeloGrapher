@@ -73,7 +73,7 @@ void BlockWrapper::close_file() {
 	buffer_manager.spectrum_off();
 	buffer_manager.audio_off();
 
-	std::chrono::milliseconds delayTime(100); //100ms delay
+	std::chrono::milliseconds delayTime(1000); //100ms delay
 	std::this_thread::sleep_for(delayTime); //delay for audio to be unprepared
 
 	if (encoded_audio != nullptr) {
@@ -112,7 +112,7 @@ void BlockWrapper::seek(int64_t pos) {
 	// move cursor
 	encoded_audio->seek(pos);
 
-	std::chrono::milliseconds delayTime(100); //100ms delay
+	std::chrono::milliseconds delayTime(1000); //100ms delay
 	std::this_thread::sleep_for(delayTime); //delay for audio to be unprepared
 
 	fill_thread();

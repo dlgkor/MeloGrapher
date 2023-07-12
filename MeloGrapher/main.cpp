@@ -111,6 +111,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 1, 10, NULL);
 		return 0;
 	case WM_LBUTTONDOWN:
+		final_wrapper.close_file();
 		final_wrapper.open_file(filename);
 		final_wrapper.fill_thread();
 		final_wrapper.play_file();

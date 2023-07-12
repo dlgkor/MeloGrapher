@@ -61,17 +61,10 @@ public:
 private:
 	int fill_audio_block(int target_cursor, EncodedAudio* encoded_audio);
 	int fill_spectrum_block(int target_cursor);
-	//void fill_spectrum_block();
-	//wait until block emptys by thread
-	//fill empty block continuously
 };
 
 BufferManager::BufferManager() {
-	//audio_block = new AudioBlock[MAX_AUDIO_BLOCK];
-	//spectrum_block = new SpectrumBlock[MAX_SPECTRUM_BLOCK];
 	memset(audio_block, 0, sizeof(AudioBlock*) * MAX_AUDIO_BLOCK);
-	//memset(spectrum_block, 0, sizeof(SpectrumBlock*) * MAX_SPECTRUM_BLOCK);
-
 	spectrum_block = new SpectrumBlock[MAX_SPECTRUM_BLOCK];
 
 	audio_cursor = 0; //audio cursor for displaying and buffering
@@ -111,7 +104,7 @@ int BufferManager::get_waveout_block(short** waveout_block_repos_pointer, int wa
 
 		std::cout << "exceed audio cursor buffer" << std::endl;
 		// exceed audio cursor buffer
-		// check if target audio buffer is change		
+		// check if target audio buffer is change
 
 		int audio1_size = audio_block[audio_cursor]->getTotalSize() - waveout_cursor;
 
@@ -222,10 +215,10 @@ int BufferManager::fill_audio_block(int target_cursor, EncodedAudio* encoded_aud
 
 int BufferManager::check_spectrum_block() {
 	//check spectrum block and notify
+	std::unique_lock<std::mutex> lock(spectrum_mutex);
+
 	if (spectrum_on == false)
 		return -1;
-
-	std::unique_lock<std::mutex> lock(spectrum_mutex);
 
 	std::cout << "checking spectrum buffer" << std::endl;
 
@@ -274,10 +267,10 @@ int BufferManager::check_spectrum_block() {
 }
 
 int BufferManager::get_spectrum_block(SpectrumBlock* spectrum_block_repos) {
+	std::unique_lock<std::mutex> lock(spectrum_mutex);
+
 	if (spectrum_on == false)
 		return  -1;
-
-	std::unique_lock<std::mutex> lock(spectrum_mutex);
 
 	*spectrum_block_repos = spectrum_block[spectrum_cursor]; //return copy of current spectrum_block instance
 
@@ -287,7 +280,6 @@ int BufferManager::get_spectrum_block(SpectrumBlock* spectrum_block_repos) {
 
 void BufferManager::fill_spectrum_init() {
 	std::unique_lock<std::mutex> lock(spectrum_mutex);
-
 	{
 		std::unique_lock<std::mutex> lock(audio_mutex);
 		for (int block = 0; block < MAX_AUDIO_BLOCK; block++) {
@@ -412,7 +404,6 @@ int BufferManager::fill_spectrum_block(int target_cursor) {
 	std::cout << "fill block" << std::endl;
 	//change last targetblock and targetsample
 
-	//delete[] audioblock_instance;
 	std::cout << "fft completed. audio block resolved" << std::endl;
 	return 0;
 }
