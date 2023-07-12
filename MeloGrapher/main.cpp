@@ -1,5 +1,8 @@
-#include"common.h"
-#include"meloWrapper.h"
+#include"CommonHeader.h"
+#include"BlockWrapper.h"
+#include"WindowWrapper.h"
+#include"displaySpectrum.h"
+//#include"spectrumUtils.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
@@ -27,17 +30,25 @@ void DrawBitmap(HDC hdc, int x, int y, HBITMAP hBit) {
 	DeleteDC(MemDC);
 }
 
+CustomWindow custom_window;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
-	HWND hWnd;
-	MSG Message;
-	WNDCLASS WndClass;
-	g_hInst = hInstance;
-
 	ULONG_PTR gpToken;
 	Gdiplus::GdiplusStartupInput gpsi;
 
 	if (GdiplusStartup(&gpToken, &gpsi, NULL) != Gdiplus::Ok) return 0;
+
+	HWND hWnd;
+	MSG Message;
+
+	custom_window.setScreenSize(700, 700);
+	hWnd = custom_window.CreateCustomWindow(hInstance, WndProc, lpszClass);
+
+	/*
+	WNDCLASS WndClass;
+	g_hInst = hInstance;
+
+	
 
 	WndClass.cbClsExtra = 0;
 	WndClass.cbWndExtra = 0;
@@ -54,6 +65,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	hWnd = CreateWindow(lpszClass, lpszClass, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 700, 700,
 		NULL, (HMENU)NULL, hInstance, NULL);
+	*/
+
 	ShowWindow(hWnd, nCmdShow);
 
 	while (GetMessage(&Message, NULL, 0, 0)) {
@@ -61,13 +74,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 		DispatchMessage(&Message);
 	}
 
+	
 	Gdiplus::GdiplusShutdown(gpToken);
+
 	return (int)Message.wParam;
 }
 
-melo::Player* melo_player;
-
-void paintFunction(HWND hWnd, HDC hdc) {
+void paintFunction(HWND hWnd, HDC hdc, BlockWrapper* final_wrapper) {
 	HDC hMemDC;
 	HBITMAP OldBit;
 	HBRUSH dbrush;
@@ -97,9 +110,29 @@ void paintFunction(HWND hWnd, HDC hdc) {
 
 	p_graphic = new Gdiplus::Graphics(hMemDC);
 	p_graphic->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+	
+	//display spectrum
+	if (final_wrapper->encoded_audio != nullptr) {
+		melo::SpectrumOption spectrum_option;
+		spectrum_option.s_gap = 32768 / 16;
+		spectrum_option.s_window = 32768 / 4;
+		spectrum_option.s_window_half = spectrum_option.s_window / 2;
+		spectrum_option.base_frequency = (double)final_wrapper->encoded_audio->get_sample_rate() / (double)spectrum_option.s_window;
 
-	melo_player->checkSpectrum();
-	melo_player->displaySpectrum(p_graphic);
+		spectrum_option.max_out_frequency = 1000;
+		spectrum_option.min_out_frequency = 10;
+		spectrum_option.max_height = 400;
+		spectrum_option.n_graph = 100;
+		spectrum_option.r_center = { 0, 0 };
+		spectrum_option.radius = 200;
+
+		SpectrumBlock* spectrum_instance = new SpectrumBlock();
+		if (final_wrapper->buffer_manager.get_spectrum_block(spectrum_instance) != -1) {
+			melo::PrintCircularFrequencyWithGDI(p_graphic, spectrum_instance, spectrum_option);
+			//get current spectrum data
+		}
+		delete spectrum_instance;
+	}
 
 	delete p_graphic;
 
@@ -108,44 +141,26 @@ void paintFunction(HWND hWnd, HDC hdc) {
 	if (hbit) DrawBitmap(hdc, 0, 0, hbit); //hbit을 hdc를 이용해 출력
 }
 
-void waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwParam1, DWORD dwParam2)
-{
-	if (uMsg != WOM_DONE) return;
-	//s_buffer->fill_buffer(s_decoder);
-	
-	//if (!melo_player->is_muisc_start())
-		//return;
-
-	while(melo_player->WriteWaveBuffer() == -1);
-	return;
-}
-
-static void CALLBACK waveOutProcWrap(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
-{
-	waveOutProc(hWaveOut, uMsg, dwParam1, dwParam2);
-}
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	HDC hdc;
-	//static RECT crt;
 	PAINTSTRUCT ps;
 
+	const char* filename = "C:/Users/ydhan/dlg project/test/ffmpegtest/test.mp3";
+	static BlockWrapper final_wrapper;
 
 	switch (iMessage) {
 	case WM_CREATE:
 		hWndMain = hWnd;
-
-		melo_player = new melo::Player();
-		melo_player->readAudio("D:/mp3/Sneaky Driver.mp3");
-		melo_player->setSpecturmOption();
-		
-		SetTimer(hWnd, 1, 10, NULL);
-
 		hbit = NULL;
+
+		SetTimer(hWnd, 1, 10, NULL);
 		return 0;
 	case WM_LBUTTONDOWN:
-		melo_player->setWaveOut(waveOutProcWrap);
-		melo_player->Start();
+		final_wrapper.open_file(filename);
+		final_wrapper.fill_audio_thread();
+		final_wrapper.fill_spectrum_thread();
+
+		final_wrapper.play_file();
 		return 0;
 	case WM_TIMER:
 		switch (wParam)
@@ -158,11 +173,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 
-		paintFunction(hWnd, hdc);
+		paintFunction(hWnd, hdc, &final_wrapper);
 		
 		EndPaint(hWnd, &ps);
 		return 0;
 	case WM_DESTROY:
+		final_wrapper.close_file();
 		if (hbit) DeleteObject(hbit);
 		PostQuitMessage(0);
 		return 0;

@@ -1,6 +1,10 @@
 #pragma once
-#include"common.h"
+#include"CommonHeader.h"
 #include"spectrumUtils.h"
+#include"DataStruct.h"
+
+#define M_PI 3.141592
+
 namespace melo {
 	const cpx img(0.0, 1.0);
 
@@ -8,11 +12,11 @@ namespace melo {
 		Ellipse(hdc, center.x - rad, center.y - rad, center.x + rad, center.y + rad);
 	}
 
-	int PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, std::vector<cpx>& output, SpectrumOption option) {
+	int PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBlock* spectrum_block, SpectrumOption option) {
 		Gdiplus::Pen* p_pen;
 		Gdiplus::SolidBrush solidbrush1(Gdiplus::Color(255, 120, 193, 243));
 
-		if (output.size() == 0)
+		if (spectrum_block->get_total_size() == 0)
 			return 0;
 
 		int maxFqpoint = (int)(option.max_out_frequency / option.base_frequency);
@@ -33,10 +37,12 @@ namespace melo {
 
 		int ic = 0;
 
+		const double* output = spectrum_block->get_data();
+
 		for (int i = 0; i < option.n_graph * Cut; i++) {
 			ic = i / Cut;
 			amp = 0.2;
-			f[ic] = max(f[ic], sqrt(pow(output.at(i + minFqpoint).real(), 2) + pow(output.at(i + minFqpoint).imag(), 2)) * amp);
+			f[ic] = max(f[ic], output[i + minFqpoint] * amp);
 
 			if (ic > option.max_height) {
 				f[ic] = option.max_height;

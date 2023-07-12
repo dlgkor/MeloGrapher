@@ -27,16 +27,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="audioUtils.h" />
-    <ClInclude Include="common.h" />
+    <ClInclude Include="BufferManager.h" />
+    <ClInclude Include="CommonHeader.h" />
+    <ClInclude Include="DataStruct.h" />
     <ClInclude Include="displaySpectrum.h" />
-    <ClInclude Include="ffmpegWrapper.h" />
-    <ClInclude Include="FFT.h" />
-    <ClInclude Include="meloGrapher.h" />
-    <ClInclude Include="meloWrapper.h" />
-    <ClInclude Include="noiseMaker.h" />
+    <ClInclude Include="FFmpegWrapper.h" />
+    <ClInclude Include="BlockWrapper.h" />
     <ClInclude Include="spectrumUtils.h" />
     <ClInclude Include="vector2d.h" />
+    <ClInclude Include="WaveOut.h" />
+    <ClInclude Include="WindowWrapper.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -124,12 +124,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\library\ffmpeg-N-111373-g7eeef72c67-win64-gpl-shared\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ydhan\dlg project\library\ffmpeg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\library\ffmpeg-N-111373-g7eeef72c67-win64-gpl-shared\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\ydhan\dlg project\library\ffmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>avcodec.lib;avutil.lib;avformat.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
