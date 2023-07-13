@@ -49,6 +49,9 @@
     <Filter Include="소스 파일\struct_DATA">
       <UniqueIdentifier>{61509b57-dc9f-4e32-b1a6-8366b4179888}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\CustomUI">
+      <UniqueIdentifier>{d85365b3-5c18-4255-ab07-a3ddef97ba6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,9 +72,6 @@
     <ClCompile Include="SpectrumUtils.cpp">
       <Filter>소스 파일\spectrum_GUI</Filter>
     </ClCompile>
-    <ClCompile Include="vector2d.cpp">
-      <Filter>소스 파일\spectrum_GUI</Filter>
-    </ClCompile>
     <ClCompile Include="CustomWindow.cpp">
       <Filter>소스 파일\window_FEATURE</Filter>
     </ClCompile>
@@ -89,6 +89,21 @@
     </ClCompile>
     <ClCompile Include="displaySpectrum.cpp">
       <Filter>소스 파일\spectrum_GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="vector2d.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomButton.cpp">
+      <Filter>소스 파일\CustomUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomPlane.cpp">
+      <Filter>소스 파일\CustomUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomMenu.cpp">
+      <Filter>소스 파일\CustomUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MainPaintProc.cpp">
+      <Filter>소스 파일\PROC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,9 +123,6 @@
       <Filter>헤더 파일\spectrum_GUI</Filter>
     </ClInclude>
     <ClInclude Include="spectrumUtils.h">
-      <Filter>헤더 파일\spectrum_GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="vector2d.h">
       <Filter>헤더 파일\spectrum_GUI</Filter>
     </ClInclude>
     <ClInclude Include="FFmpegWrapper.h">
@@ -136,6 +148,12 @@
     </ClInclude>
     <ClInclude Include="meloData.h">
       <Filter>헤더 파일\struct_DATA</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomUI.h">
+      <Filter>헤더 파일\ui_GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="vector2d.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

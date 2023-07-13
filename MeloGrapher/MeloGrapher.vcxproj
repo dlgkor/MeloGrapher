@@ -22,10 +22,14 @@
     <ClCompile Include="audioData.cpp" />
     <ClCompile Include="BlockWrapper.cpp" />
     <ClCompile Include="BufferManager.cpp" />
+    <ClCompile Include="CustomButton.cpp" />
+    <ClCompile Include="CustomMenu.cpp" />
+    <ClCompile Include="CustomPlane.cpp" />
     <ClCompile Include="CustomWindow.cpp" />
     <ClCompile Include="displaySpectrum.cpp" />
     <ClCompile Include="FFmpegWrapper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainPaintProc.cpp" />
     <ClCompile Include="MainWndProc.cpp" />
     <ClCompile Include="RootWndProc.cpp" />
     <ClCompile Include="spectrumData.cpp" />
@@ -36,6 +40,7 @@
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="CommonHeader.h" />
+    <ClInclude Include="CustomUI.h" />
     <ClInclude Include="CustomWindow.h" />
     <ClInclude Include="DataStruct.h" />
     <ClInclude Include="displaySpectrum.h" />

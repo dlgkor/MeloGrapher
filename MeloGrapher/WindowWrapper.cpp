@@ -57,6 +57,18 @@ int MeloWindow::set_main_data() {
 	main_data.root_hwnd = root_hwnd;
 	main_data.this_window = &main_window;
 
+	main_data.spectrum_option.s_gap = 32768 / 16;
+	main_data.spectrum_option.s_window = 32768 / 4;
+	main_data.spectrum_option.s_window_half = main_data.spectrum_option.s_window / 2;	
+	main_data.spectrum_option.base_frequency = 44100.0 / (double)main_data.spectrum_option.s_window;
+
+	main_data.spectrum_option.max_out_frequency = 1000;
+	main_data.spectrum_option.min_out_frequency = 10;
+	main_data.spectrum_option.max_height = 400;
+	main_data.spectrum_option.n_graph = 100;
+	main_data.spectrum_option.r_center = { 0, 0 };
+	main_data.spectrum_option.radius = 200;
+
 	SetWindowLongPtr(main_window.w_hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&main_data));
 	return 0;
 }
@@ -84,7 +96,7 @@ int MeloWindow::create_main() {
 	main_window.setScreenSize(700, 700);
 	main_window.SetScreenLocation((screen_width - main_window.screenWidth) / 2, (sceen_height - main_window.screenHeight) / 2);
 
-	main_window.w_hWnd = CreateWindow(lpszClass, L"MeloGrapher", WS_OVERLAPPEDWINDOW | WS_EX_LAYERED,
+	main_window.w_hWnd = CreateWindow(lpszClass, L"MeloGrapher", WS_OVERLAPPEDWINDOW,
 		main_window.locationX, main_window.locationY, main_window.screenWidth, main_window.screenHeight,
 		root_hwnd, (HMENU)NULL, hInstance, NULL); //root 윈도우와 소유-피소유 관계를 설정해준다
 
@@ -94,7 +106,7 @@ int MeloWindow::create_main() {
 
 int MeloWindow::show_main() {
 	//SetWindowLongPtr(main_window.w_hWnd, GWL_STYLE, 0); //테두리를 없애준다
-	SetLayeredWindowAttributes(main_window.w_hWnd, RGB(0, 0, 255), 255, LWA_ALPHA | LWA_COLORKEY);
+	
 	SetWindowPos(main_window.w_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 	ShowWindow(main_window.w_hWnd, SW_SHOW);
 	return 0;
