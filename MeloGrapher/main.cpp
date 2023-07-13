@@ -11,7 +11,6 @@ HBITMAP hbit;
 CustomWindow custom_window;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
-	
 	ULONG_PTR gpToken;
 	Gdiplus::GdiplusStartupInput gpsi;
 	if (GdiplusStartup(&gpToken, &gpsi, NULL) != Gdiplus::Ok) return 0;
@@ -111,7 +110,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 1, 10, NULL);
 		return 0;
 	case WM_LBUTTONDOWN:
-		final_wrapper.close_file();
+		final_wrapper.close_file(); //close if file is opened
 		final_wrapper.open_file(filename);
 		final_wrapper.fill_thread();
 		final_wrapper.play_file();

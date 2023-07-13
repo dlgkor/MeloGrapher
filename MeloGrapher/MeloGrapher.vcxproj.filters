@@ -71,6 +71,9 @@
     <ClInclude Include="CustomWindow.h">
       <Filter>헤더 파일\window_FEATURE</Filter>
     </ClInclude>
+    <ClInclude Include="WindowWrapper.cpp">
+      <Filter>헤더 파일\window_FEATURE</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MeloGrapher.rc">

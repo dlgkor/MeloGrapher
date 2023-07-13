@@ -109,8 +109,8 @@ void BlockWrapper::fill_thread() {
 void BlockWrapper::seek(int64_t pos) {
 	buffer_manager.spectrum_off();
 	buffer_manager.audio_off();
-	// move cursor
-	encoded_audio->seek(pos);
+	
+	encoded_audio->seek(pos); //move cursor
 
 	std::chrono::milliseconds delayTime(1000); //100ms delay
 	std::this_thread::sleep_for(delayTime); //delay for audio to be unprepared

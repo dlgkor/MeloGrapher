@@ -34,6 +34,7 @@
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="WaveOut.h" />
     <ClInclude Include="WindowWrapper.h" />
+    <ClInclude Include="WindowWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MeloGrapher.rc" />
