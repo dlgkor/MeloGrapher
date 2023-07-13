@@ -19,7 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlockWrapper.cpp" />
+    <ClCompile Include="BufferManager.cpp" />
+    <ClCompile Include="CustomWindow.cpp" />
+    <ClCompile Include="DataStruct_Audio.cpp" />
+    <ClCompile Include="DataStruct_Spectrum.cpp" />
+    <ClCompile Include="displaySpectrum.cpp" />
+    <ClCompile Include="FFmpegWrapper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainWndProc.cpp" />
+    <ClCompile Include="RootWndProc.cpp" />
+    <ClCompile Include="SpectrumUtils.cpp" />
+    <ClCompile Include="vector2d.cpp" />
+    <ClCompile Include="WaveOut.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
@@ -29,7 +41,9 @@
     <ClInclude Include="displaySpectrum.h" />
     <ClInclude Include="FFmpegWrapper.h" />
     <ClInclude Include="BlockWrapper.h" />
+    <ClInclude Include="meloData.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="WndProc.h" />
     <ClInclude Include="spectrumUtils.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="WaveOut.h" />

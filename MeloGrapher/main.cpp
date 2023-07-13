@@ -1,6 +1,15 @@
 #include"CommonHeader.h"
 #include"WindowWrapper.cpp"
+//야발
+//확인할 수 없는 외부참조 오류는 cpp파일을 include 하니 해결되었다
 
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
+
+	MeloWindow melo_window(hInstance);
+	return melo_window.wnd_main();
+}
+
+/*
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
 HWND hWndMain;
@@ -9,12 +18,9 @@ LPCTSTR lpszClass = TEXT("MeloGrapher");
 HBITMAP hbit;
 
 CustomWindow custom_window;
+*/
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
-	MeloWindow melo_window(hInstance);
-	return melo_window.wnd_main();
-}
-
+/*
 int APIENTRY WinMain2(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	ULONG_PTR gpToken;
 	Gdiplus::GdiplusStartupInput gpsi;
@@ -148,3 +154,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	}
 	return(DefWindowProc(hWnd, iMessage, wParam, lParam));
 }
+*/

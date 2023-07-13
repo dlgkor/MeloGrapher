@@ -28,10 +28,67 @@
     <Filter Include="헤더 파일\block_FEATURE">
       <UniqueIdentifier>{76316d4e-50c9-49a0-80da-60ed3c8c13c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\PROC">
+      <UniqueIdentifier>{73440fd8-f050-443a-8b48-4b4da0dc33df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\struct_DATA">
+      <UniqueIdentifier>{8e72f1db-b320-46dd-80a7-35eaa970c63a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PROC">
+      <UniqueIdentifier>{1df4ec07-3a75-4cf8-8dfd-d7a9d7c2c879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\DataStruct">
+      <UniqueIdentifier>{255afaae-b945-4d2c-9906-1529f954f845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\spectrum_GUI">
+      <UniqueIdentifier>{f4069fc5-8331-4936-ba10-a398fdb57f19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\window_FEATURE">
+      <UniqueIdentifier>{b2a4e054-8658-45c1-84fb-db4f5abd80ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Wrapper">
+      <UniqueIdentifier>{f4194088-935d-47c2-9414-23016bedc06b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWndProc.cpp">
+      <Filter>소스 파일\PROC</Filter>
+    </ClCompile>
+    <ClCompile Include="RootWndProc.cpp">
+      <Filter>소스 파일\PROC</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DataStruct_Spectrum.cpp">
+      <Filter>소스 파일\DataStruct</Filter>
+    </ClCompile>
+    <ClCompile Include="DataStruct_Audio.cpp">
+      <Filter>소스 파일\DataStruct</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveOut.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SpectrumUtils.cpp">
+      <Filter>소스 파일\spectrum_GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="displaySpectrum.cpp">
+      <Filter>소스 파일\spectrum_GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="vector2d.cpp">
+      <Filter>소스 파일\spectrum_GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomWindow.cpp">
+      <Filter>소스 파일\window_FEATURE</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockWrapper.cpp">
+      <Filter>소스 파일\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="FFmpegWrapper.cpp">
+      <Filter>소스 파일\Wrapper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +130,12 @@
     </ClInclude>
     <ClInclude Include="WindowWrapper.cpp">
       <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="WndProc.h">
+      <Filter>헤더 파일\PROC</Filter>
+    </ClInclude>
+    <ClInclude Include="meloData.h">
+      <Filter>헤더 파일\struct_DATA</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

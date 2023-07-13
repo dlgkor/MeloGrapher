@@ -1,27 +1,10 @@
 #pragma once
 #include"CommonHeader.h"
-#include"BlockWrapper.h"
-#include"displaySpectrum.h"
-#include"CustomWindow.h"
+#include"meloData.h"
+#include"WndProc.h"
 
 #define MAX_CHILD_WINDOW 5
 #define WM_TRAYICON (WM_USER + 1)
-
-LRESULT CALLBACK WndProc_Root(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK WndProc_Main(HWND, UINT, WPARAM, LPARAM);
-
-struct MeloRootWndData {
-	BlockWrapper* block_wrapper; 
-	//no calculation
-	//just check child window state and display
-};
-
-struct MeloWndData {
-	HWND root_hwnd; //use to post destroy message to root when child is distroyed
-	BlockWrapper* block_wrapper;
-	CustomWindow* this_window;
-	melo::SpectrumOption spectrum_option;
-};
 
 class MeloWindow {
 private:
