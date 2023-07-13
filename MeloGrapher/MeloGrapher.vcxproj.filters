@@ -72,7 +72,7 @@
       <Filter>헤더 파일\window_FEATURE</Filter>
     </ClInclude>
     <ClInclude Include="WindowWrapper.cpp">
-      <Filter>헤더 파일\window_FEATURE</Filter>
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
