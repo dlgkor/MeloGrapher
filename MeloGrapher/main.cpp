@@ -1,5 +1,5 @@
 #include"CommonHeader.h"
-#include"WindowWrapper.h"
+#include"WindowWrapper.cpp"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
@@ -11,6 +11,11 @@ HBITMAP hbit;
 CustomWindow custom_window;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
+	MeloWindow melo_window(hInstance);
+	return melo_window.wnd_main();
+}
+
+int APIENTRY WinMain2(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	ULONG_PTR gpToken;
 	Gdiplus::GdiplusStartupInput gpsi;
 	if (GdiplusStartup(&gpToken, &gpsi, NULL) != Gdiplus::Ok) return 0;

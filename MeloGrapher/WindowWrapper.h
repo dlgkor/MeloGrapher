@@ -8,22 +8,23 @@
 #define WM_TRAYICON (WM_USER + 1)
 
 LRESULT CALLBACK WndProc_Root(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK WndProc_Child(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc_Main(HWND, UINT, WPARAM, LPARAM);
 
 struct MeloRootWndData {
-	BlockWrapper* block_wrapper;
+	BlockWrapper* block_wrapper; 
+	//no calculation
+	//just check child window state and display
 };
 
-
 struct MeloWndData {
-	int wnd_id;
+	HWND root_hwnd; //use to post destroy message to root when child is distroyed
 	BlockWrapper* block_wrapper;
 	CustomWindow* this_window;
 	melo::SpectrumOption spectrum_option;
 };
 
 class MeloWindow {
-public:
+private:
 	HINSTANCE hInstance;
 
 	BlockWrapper block_wrapper; //block calculator	
@@ -32,15 +33,17 @@ public:
 	MeloRootWndData root_data;
 	NOTIFYICONDATA nid;
 
-	CustomWindow child_window; //custom child window
-	MeloWndData child_data; //data for setlongptr
-	//int count_child_window;
+	CustomWindow main_window; //custom child window
+	MeloWndData main_data; //data for setlongptr
 public:
 	MeloWindow(HINSTANCE _hInstance);
-	int create_root();
-	int destroy_root(); //destroy tray icon
-	int create_child(); //create child window
-	int show_child();
 	int wnd_main();
 	~MeloWindow();
+private:
+	int set_root_data();
+	int set_main_data();
+	int create_root();
+	int destroy_root(); //destroy tray icon
+	int create_main(); //create child window
+	int show_main();
 };

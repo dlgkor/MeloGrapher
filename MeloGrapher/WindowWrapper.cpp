@@ -4,24 +4,33 @@ MeloWindow::MeloWindow(HINSTANCE _hInstance) {
 	hInstance = _hInstance;
 }
 
+//initialize root data
+int MeloWindow::set_root_data() {
+	if (root_hwnd == NULL)
+		return -1;
+
+	root_data.block_wrapper = &block_wrapper;
+	SetWindowLongPtr(root_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&root_data));
+	return 0;
+}
+
+
 //create root wnd
 int MeloWindow::create_root() {
-	LPCTSTR lpszClass = TEXT("meloGrapher Root");
+	LPCTSTR lpszClass = TEXT("melo_grapher_root");
 
 	WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
 	wcex.lpfnWndProc = WndProc_Root;
 	wcex.hInstance = hInstance;
 	wcex.lpszClassName = lpszClass;
+	wcex.cbWndExtra = sizeof(MeloRootWndData); //extra memory for setptr and getptr
 	RegisterClassEx(&wcex);
 
-	root_hwnd = CreateWindowEx(0, lpszClass, L"MeloGrapher", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT,
+	root_hwnd = CreateWindow(lpszClass, L"MeloGrapher", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 		0, 0, NULL, NULL, hInstance, NULL);
-
-	//initialize root data
-	root_data.block_wrapper = &block_wrapper;
-	SetWindowLongPtr(root_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&root_data));
-
-	//ShowWindow(root_hwnd, SW_HIDE);
+	
+	set_root_data();
+	ShowWindow(root_hwnd, SW_HIDE);
 
 	nid = { sizeof(NOTIFYICONDATA) };
 	nid.hWnd = root_hwnd;
@@ -43,24 +52,65 @@ int MeloWindow::destroy_root() {
 	return 0;
 }
 
-int MeloWindow::create_child() {
+int MeloWindow::set_main_data() {
+	main_data.block_wrapper = &block_wrapper;
+	main_data.root_hwnd = root_hwnd;
+	main_data.this_window = &main_window;
 
+	SetWindowLongPtr(main_window.w_hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&main_data));
 	return 0;
 }
 
-int MeloWindow::show_child() {
+//create main window
+int MeloWindow::create_main() {
+	LPCTSTR lpszClass = TEXT("melo_grapher_main");
 
+	WNDCLASS WndClass;
+	WndClass.cbClsExtra = 0;
+	WndClass.cbWndExtra = sizeof(MeloWndData);
+	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	WndClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(MAIN_ICON));
+	WndClass.hInstance = hInstance;
+	WndClass.lpfnWndProc = WndProc_Main;
+	WndClass.lpszClassName = lpszClass;
+	WndClass.lpszMenuName = NULL;
+	WndClass.style = CS_HREDRAW | CS_VREDRAW;
+	RegisterClass(&WndClass);
+	
+	int screen_width = GetSystemMetrics(SM_CXSCREEN);
+	int sceen_height = GetSystemMetrics(SM_CYSCREEN);
+
+	main_window.setScreenSize(700, 700);
+	main_window.SetScreenLocation((screen_width - main_window.screenWidth) / 2, (sceen_height - main_window.screenHeight) / 2);
+
+	main_window.w_hWnd = CreateWindow(lpszClass, L"MeloGrapher", WS_OVERLAPPEDWINDOW | WS_EX_LAYERED,
+		main_window.locationX, main_window.locationY, main_window.screenWidth, main_window.screenHeight,
+		root_hwnd, (HMENU)NULL, hInstance, NULL); //root 윈도우와 소유-피소유 관계를 설정해준다
+
+	set_main_data();
+	return 0;
+}
+
+int MeloWindow::show_main() {
+	//SetWindowLongPtr(main_window.w_hWnd, GWL_STYLE, 0); //테두리를 없애준다
+	SetLayeredWindowAttributes(main_window.w_hWnd, RGB(0, 0, 255), 255, LWA_ALPHA | LWA_COLORKEY);
+	SetWindowPos(main_window.w_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	ShowWindow(main_window.w_hWnd, SW_SHOW);
 	return 0;
 }
 
 //final wrapper
 int MeloWindow::wnd_main() {
+	ULONG_PTR gpToken;
+	Gdiplus::GdiplusStartupInput gpsi;
+	if (GdiplusStartup(&gpToken, &gpsi, NULL) != Gdiplus::Ok) return 0;
+
 	MSG Message;
 
 	create_root();
-
-	create_child();
-	show_child();
+	create_main();
+	show_main();
 
 	//translate and dispatch message
 	while (GetMessage(&Message, NULL, 0, 0)) {
@@ -70,6 +120,7 @@ int MeloWindow::wnd_main() {
 
 	destroy_root();
 
+	Gdiplus::GdiplusShutdown(gpToken);
 	return (int)Message.wParam;
 }
 
@@ -84,6 +135,7 @@ MeloWindow::~MeloWindow() {
 
 
 LRESULT CALLBACK WndProc_Root(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+	MeloRootWndData* root_data = reinterpret_cast<MeloRootWndData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 	HDC hdc;
 	PAINTSTRUCT ps;
 
@@ -102,22 +154,34 @@ LRESULT CALLBACK WndProc_Root(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 }
 
 
-LRESULT CALLBACK WndProc_Child(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
-	//SetWindowLongPtr from wndmain or MeloWindow class
-	//GetWindowLongPtr from here
-	//get speciic pointer by handle data
-	HDC hdc;
-	PAINTSTRUCT ps;
+/*
+* SetWindowLongPtr from wndmain or MeloWindow class
+* GetWindowLongPtr from here
+* get speciic pointer by handle data
+*/
+LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+	MeloWndData* main_data = reinterpret_cast<MeloWndData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	
 
 	switch (iMessage) {
 	case WM_CREATE:
 		return 0;
 	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
+		main_data->this_window->w_hdc = BeginPaint(hWnd, &main_data->this_window->w_ps);
+		//Init hbit(Double buffering)
+		//Draw RGB(0,0,255) Rect at hbit
+		
+		//Drawing...
+
+		//Make background in circle to have little transparency
+		//Draw it with gdi+
+		
+		//Draw hbit at screen
+		//Destroy hbit
+		EndPaint(hWnd, &main_data->this_window->w_ps);
 		return 0;
 	case WM_DESTROY:
-		PostQuitMessage(0);
+		PostMessage(main_data->root_hwnd, WM_DESTROY, NULL, NULL);
 		return 0;
 	}
 	return(DefWindowProc(hWnd, iMessage, wParam, lParam));

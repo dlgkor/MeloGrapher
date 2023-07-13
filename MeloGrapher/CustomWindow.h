@@ -2,7 +2,7 @@
 #include"CommonHeader.h"
 
 class CustomWindow {
-private:
+public:
 	int screenWidth, screenHeight;
 	int locationX, locationY;
 	HWND w_hWnd;
