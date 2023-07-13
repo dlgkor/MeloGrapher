@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="audioData.cpp" />
     <ClCompile Include="BlockWrapper.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="CustomWindow.cpp" />
-    <ClCompile Include="DataStruct_Audio.cpp" />
-    <ClCompile Include="DataStruct_Spectrum.cpp" />
     <ClCompile Include="displaySpectrum.cpp" />
     <ClCompile Include="FFmpegWrapper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWndProc.cpp" />
     <ClCompile Include="RootWndProc.cpp" />
+    <ClCompile Include="spectrumData.cpp" />
     <ClCompile Include="SpectrumUtils.cpp" />
     <ClCompile Include="vector2d.cpp" />
     <ClCompile Include="WaveOut.cpp" />

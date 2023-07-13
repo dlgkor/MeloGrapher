@@ -5,6 +5,7 @@
 #define MAX_AUDIO_SAMPLES 441000
 #define MAX_SPECTRUM_NUMBER 441000
 
+
 class AudioBlock {
 private:
 	short data[MAX_AUDIO_CHANNELS][MAX_AUDIO_SAMPLES]; //real sample data

@@ -1,10 +1,4 @@
 #pragma once
-extern "C" {
-#include <libavcodec/avcodec.h>
-#include <libavutil/avutil.h>
-#include<libavformat/avformat.h>
-}
-
 #include"CommonHeader.h"
 #include"DataStruct.h"
 

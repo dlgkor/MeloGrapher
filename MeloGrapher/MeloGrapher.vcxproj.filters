@@ -37,9 +37,6 @@
     <Filter Include="소스 파일\PROC">
       <UniqueIdentifier>{1df4ec07-3a75-4cf8-8dfd-d7a9d7c2c879}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\DataStruct">
-      <UniqueIdentifier>{255afaae-b945-4d2c-9906-1529f954f845}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\spectrum_GUI">
       <UniqueIdentifier>{f4069fc5-8331-4936-ba10-a398fdb57f19}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     </Filter>
     <Filter Include="소스 파일\Wrapper">
       <UniqueIdentifier>{f4194088-935d-47c2-9414-23016bedc06b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\struct_DATA">
+      <UniqueIdentifier>{61509b57-dc9f-4e32-b1a6-8366b4179888}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,19 +63,10 @@
     <ClCompile Include="BufferManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DataStruct_Spectrum.cpp">
-      <Filter>소스 파일\DataStruct</Filter>
-    </ClCompile>
-    <ClCompile Include="DataStruct_Audio.cpp">
-      <Filter>소스 파일\DataStruct</Filter>
-    </ClCompile>
     <ClCompile Include="WaveOut.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SpectrumUtils.cpp">
-      <Filter>소스 파일\spectrum_GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="displaySpectrum.cpp">
       <Filter>소스 파일\spectrum_GUI</Filter>
     </ClCompile>
     <ClCompile Include="vector2d.cpp">
@@ -89,6 +80,15 @@
     </ClCompile>
     <ClCompile Include="FFmpegWrapper.cpp">
       <Filter>소스 파일\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="audioData.cpp">
+      <Filter>소스 파일\struct_DATA</Filter>
+    </ClCompile>
+    <ClCompile Include="spectrumData.cpp">
+      <Filter>소스 파일\struct_DATA</Filter>
+    </ClCompile>
+    <ClCompile Include="displaySpectrum.cpp">
+      <Filter>소스 파일\spectrum_GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

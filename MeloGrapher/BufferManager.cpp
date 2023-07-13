@@ -1,6 +1,5 @@
 #include"BufferManager.h"
 
-
 BufferManager::BufferManager() {
 	memset(audio_block, 0, sizeof(AudioBlock*) * MAX_AUDIO_BLOCK);
 	spectrum_block = new SpectrumBlock[MAX_SPECTRUM_BLOCK];

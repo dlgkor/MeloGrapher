@@ -1,7 +1,5 @@
 #include"displaySpectrum.h"
 
-const cpx img(0.0, 1.0);
-
 void melo::HEllipse(HDC hdc, vector2d center, double rad) {
 	Ellipse(hdc, center.x - rad, center.y - rad, center.x + rad, center.y + rad);
 }

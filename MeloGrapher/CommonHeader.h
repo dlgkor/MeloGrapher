@@ -7,7 +7,6 @@
 #include<gdiplus.h>
 #pragma comment(lib, "gdiplus")
 
-
 #include<iostream>
 #include<memory>
 
@@ -19,4 +18,11 @@ typedef std::complex<double> cpx;
 #include<thread>
 #include<chrono>
 
-#define M_PI 3.141592
+extern "C" {
+#include <libavcodec/avcodec.h>
+#include <libavutil/avutil.h>
+#include<libavformat/avformat.h>
+}
+
+#include<math.h>
+//#define M_PI 3.141592
