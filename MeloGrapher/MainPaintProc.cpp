@@ -54,20 +54,6 @@ void PaintProc(MeloWndData* main_data) {
 //display spectrum
 void PaintSpectrum(MeloWndData* main_data, Gdiplus::Graphics* p_graphic) {
 	if (main_data->block_wrapper->encoded_audio != nullptr) {
-		/*
-		melo::SpectrumOption spectrum_option;
-		spectrum_option.s_gap = 32768 / 16;
-		spectrum_option.s_window = 32768 / 4;
-		spectrum_option.s_window_half = spectrum_option.s_window / 2;
-		spectrum_option.base_frequency = (double)main_data->block_wrapper->encoded_audio->get_sample_rate() / (double)spectrum_option.s_window;
-
-		spectrum_option.max_out_frequency = 1000;
-		spectrum_option.min_out_frequency = 10;
-		spectrum_option.max_height = 400;
-		spectrum_option.n_graph = 100;
-		spectrum_option.r_center = { 0, 0 };
-		spectrum_option.radius = 200;
-		*/
 		main_data->spectrum_option.base_frequency =
 			(double)main_data->block_wrapper->encoded_audio->get_sample_rate() / (double)main_data->spectrum_option.s_window;
 

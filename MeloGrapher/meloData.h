@@ -3,6 +3,7 @@
 #include"BlockWrapper.h"
 #include"displaySpectrum.h"
 #include"CustomWindow.h"
+#include"CustomUI.h"
 
 struct MeloRootWndData {
 	BlockWrapper* block_wrapper;
@@ -15,4 +16,5 @@ struct MeloWndData {
 	BlockWrapper* block_wrapper;
 	CustomWindow* this_window;
 	melo::SpectrumOption spectrum_option;
+	CustomUI::Menu custom_menu;
 };

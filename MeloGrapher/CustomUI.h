@@ -1,8 +1,11 @@
 #pragma once
 #include<Windows.h>
+#include<gdiplus.h>
 #include<math.h>
 #include<vector>
 #include"vector2d.h"
+
+//change custom ui to gdiplus base
 
 namespace CustomUI {
 	class Button {
