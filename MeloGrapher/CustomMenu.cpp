@@ -1,12 +1,12 @@
 #include"CustomUI.h"
 
 CustomUI::Menu::Menu() {
-	PlaneSize = 120.0f;
+	PlaneSize = 140.0f;
 
 	CurrentState = DEFUALT;
 	NextState = NONE;
 
-	transitionTime = 0.25f;
+	transitionTime = 0.15f;
 	accumulatedTime = 0.0f;
 	targetChange = false;
 	animationOn = false;
@@ -235,4 +235,20 @@ void CustomUI::Menu::Render(HDC hdc, float deltaT) {
 		}
 	}
 
+}
+
+void CustomUI::Menu::Render(Gdiplus::Graphics* p_graphic, float deltaT) {
+	if (NextState != NONE && CurrentState != NextState) {
+		TransitionAnimation(deltaT);
+	}
+
+	for (int i = 0; i < 3; i++) {
+		currentCube.plane[i].Render(p_graphic);
+	}
+
+	if (!animationOn) {
+		for (int i = 0; i < btnlist.size(); i++) {
+			btnlist.at(i).Render(p_graphic);
+		}
+	}
 }

@@ -25,6 +25,8 @@ CustomWindow::CustomWindow() {
 
 	w_hWnd = NULL;
 	w_hbit = NULL;
+
+	gdi_bitmap = nullptr;
 }
 
 void CustomWindow::setScreenSize(int _sizeW, int _sizeH) {

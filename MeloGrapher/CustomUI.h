@@ -1,13 +1,11 @@
 #pragma once
-#include<Windows.h>
-#include<gdiplus.h>
-#include<math.h>
-#include<vector>
+#include"CommonHeader.h"
 #include"vector2d.h"
 
 //change custom ui to gdiplus base
 
 namespace CustomUI {
+	Gdiplus::Color ConvertColorRefToGdiPlusColor(COLORREF colorRef);
 	class Button {
 	public:
 		bool Active;
@@ -34,6 +32,7 @@ namespace CustomUI {
 		void isHighlight(vector2d mousepos);
 		void Click(vector2d mousepos);
 		void Render(HDC hdc);
+		void Render(Gdiplus::Graphics* p_graphic);
 	};
 
 
@@ -47,6 +46,7 @@ namespace CustomUI {
 		bool IsInsideLine(vector2d normalv, vector2d point);
 		bool Detect(vector2d mousepos);
 		void Render(HDC hdc);
+		void Render(Gdiplus::Graphics* p_graphic);
 	};
 
 	class Cube {
@@ -85,5 +85,6 @@ namespace CustomUI {
 		void TransitionAnimation(float deltaT);
 		void Update(vector2d mousepos, bool clicked);
 		void Render(HDC hdc, float deltaT);
+		void Render(Gdiplus::Graphics* p_graphic, float deltaT);
 	};
 }

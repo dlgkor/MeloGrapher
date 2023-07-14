@@ -7,10 +7,11 @@ public:
 	int locationX, locationY;
 	HWND w_hWnd;
 
-	HDC w_hdc, w_hMemDC;
+	HDC w_hdc;
 	PAINTSTRUCT w_ps;
 
 	HBITMAP w_hbit, w_oldbit;
+	Gdiplus::Bitmap* gdi_bitmap;
 public:
 	CustomWindow();
 	void setScreenSize(int _sizeW, int _sizeH); //update screen size

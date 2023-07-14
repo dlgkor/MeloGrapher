@@ -62,12 +62,14 @@ int MeloWindow::set_main_data() {
 	main_data.spectrum_option.s_window_half = main_data.spectrum_option.s_window / 2;	
 	main_data.spectrum_option.base_frequency = 44100.0 / (double)main_data.spectrum_option.s_window;
 
-	main_data.spectrum_option.max_out_frequency = 1000;
+	main_data.spectrum_option.max_out_frequency = 4000;
 	main_data.spectrum_option.min_out_frequency = 10;
-	main_data.spectrum_option.max_height = 400;
-	main_data.spectrum_option.n_graph = 100;
+	main_data.spectrum_option.max_height = 150;
+	main_data.spectrum_option.n_graph = 200;
 	main_data.spectrum_option.r_center = { 0, 0 };
 	main_data.spectrum_option.radius = 200;
+
+	main_data.custom_menu.ResetMenu(main_data.this_window->w_hWnd);
 
 	SetWindowLongPtr(main_window.w_hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&main_data));
 	return 0;

@@ -49,3 +49,18 @@ void CustomUI::Plane::Render(HDC hdc) {
 	DeleteObject(SelectObject(hdc, OldBrush));
 	DeleteObject(SelectObject(hdc, OldPen));
 }
+
+void CustomUI::Plane::Render(Gdiplus::Graphics* p_graphic) {
+	Gdiplus::SolidBrush solidbrush(ConvertColorRefToGdiPlusColor(color));
+	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 1);
+
+	Gdiplus::Point p_point[] = {
+			Gdiplus::Point(p[0].x, p[0].y),
+			Gdiplus::Point(p[1].x, p[1].y),
+			Gdiplus::Point(p[2].x, p[2].y),
+			Gdiplus::Point(p[3].x, p[3].y)
+	};
+
+	p_graphic->FillPolygon(&solidbrush, p_point, 4);
+	p_graphic->DrawPolygon(&solidpen, p_point, 4);
+}

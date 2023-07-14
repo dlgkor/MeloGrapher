@@ -25,12 +25,14 @@
     <ClCompile Include="CustomButton.cpp" />
     <ClCompile Include="CustomMenu.cpp" />
     <ClCompile Include="CustomPlane.cpp" />
+    <ClCompile Include="CustomUIUtils.cpp" />
     <ClCompile Include="CustomWindow.cpp" />
     <ClCompile Include="displaySpectrum.cpp" />
     <ClCompile Include="FFmpegWrapper.cpp" />
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="MainMouseProc.cpp" />
     <ClCompile Include="MainPaintProc.cpp" />
     <ClCompile Include="MainWndProc.cpp" />
     <ClCompile Include="RootWndProc.cpp" />

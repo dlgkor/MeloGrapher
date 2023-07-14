@@ -13,27 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="헤더 파일\spectrum_GUI">
-      <UniqueIdentifier>{d01b119e-07e1-4964-8eb0-706a116241a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\ui_GUI">
-      <UniqueIdentifier>{2c610f10-612b-447a-8381-03f06e9d642c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\WRAPPER">
-      <UniqueIdentifier>{9f49f10c-031c-4700-9a64-908e4881e6e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\window_FEATURE">
-      <UniqueIdentifier>{d57df888-63dd-4bbe-ae46-627faa130eda}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\block_FEATURE">
-      <UniqueIdentifier>{76316d4e-50c9-49a0-80da-60ed3c8c13c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\PROC">
-      <UniqueIdentifier>{73440fd8-f050-443a-8b48-4b4da0dc33df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\struct_DATA">
-      <UniqueIdentifier>{8e72f1db-b320-46dd-80a7-35eaa970c63a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\PROC">
       <UniqueIdentifier>{1df4ec07-3a75-4cf8-8dfd-d7a9d7c2c879}</UniqueIdentifier>
     </Filter>
@@ -51,6 +30,39 @@
     </Filter>
     <Filter Include="소스 파일\CustomUI">
       <UniqueIdentifier>{d85365b3-5c18-4255-ab07-a3ddef97ba6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\FFT">
+      <UniqueIdentifier>{e93e634d-c83a-4b5f-8076-a93c91e975c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\FFT\block_FEATURE">
+      <UniqueIdentifier>{76316d4e-50c9-49a0-80da-60ed3c8c13c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\FFT\wrapper">
+      <UniqueIdentifier>{e08378b9-aaa0-4bec-9cd0-b277ba14afc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Window">
+      <UniqueIdentifier>{0720ada6-2557-4136-ae21-80faa68b442a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Window\PROC">
+      <UniqueIdentifier>{73440fd8-f050-443a-8b48-4b4da0dc33df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Window\spectrum_GUI">
+      <UniqueIdentifier>{d01b119e-07e1-4964-8eb0-706a116241a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Window\struct_DATA">
+      <UniqueIdentifier>{8e72f1db-b320-46dd-80a7-35eaa970c63a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Window\ui_GUI">
+      <UniqueIdentifier>{2c610f10-612b-447a-8381-03f06e9d642c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Window\wrapper">
+      <UniqueIdentifier>{9f49f10c-031c-4700-9a64-908e4881e6e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Common">
+      <UniqueIdentifier>{99d311ff-e563-4f19-b169-3ef0e99546a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Window\customwindow">
+      <UniqueIdentifier>{d57df888-63dd-4bbe-ae46-627faa130eda}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,55 +117,61 @@
     <ClCompile Include="MainPaintProc.cpp">
       <Filter>소스 파일\PROC</Filter>
     </ClCompile>
+    <ClCompile Include="WindowWrapper.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomUIUtils.cpp">
+      <Filter>소스 파일\CustomUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMouseProc.cpp">
+      <Filter>소스 파일\PROC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommonHeader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="BufferManager.h">
-      <Filter>헤더 파일\block_FEATURE</Filter>
+      <Filter>헤더 파일\FFT\block_FEATURE</Filter>
     </ClInclude>
     <ClInclude Include="DataStruct.h">
-      <Filter>헤더 파일\block_FEATURE</Filter>
+      <Filter>헤더 파일\FFT\block_FEATURE</Filter>
     </ClInclude>
     <ClInclude Include="WaveOut.h">
-      <Filter>헤더 파일\block_FEATURE</Filter>
+      <Filter>헤더 파일\FFT\block_FEATURE</Filter>
     </ClInclude>
     <ClInclude Include="displaySpectrum.h">
-      <Filter>헤더 파일\spectrum_GUI</Filter>
+      <Filter>헤더 파일\Window\spectrum_GUI</Filter>
     </ClInclude>
     <ClInclude Include="spectrumUtils.h">
-      <Filter>헤더 파일\spectrum_GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="FFmpegWrapper.h">
-      <Filter>헤더 파일\WRAPPER</Filter>
+      <Filter>헤더 파일\Window\spectrum_GUI</Filter>
     </ClInclude>
     <ClInclude Include="WindowWrapper.h">
-      <Filter>헤더 파일\WRAPPER</Filter>
-    </ClInclude>
-    <ClInclude Include="BlockWrapper.h">
-      <Filter>헤더 파일\WRAPPER</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\Window\wrapper</Filter>
     </ClInclude>
     <ClInclude Include="CustomWindow.h">
-      <Filter>헤더 파일\window_FEATURE</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowWrapper.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>헤더 파일\Window\customwindow</Filter>
     </ClInclude>
     <ClInclude Include="WndProc.h">
-      <Filter>헤더 파일\PROC</Filter>
+      <Filter>헤더 파일\Window\PROC</Filter>
     </ClInclude>
     <ClInclude Include="meloData.h">
-      <Filter>헤더 파일\struct_DATA</Filter>
+      <Filter>헤더 파일\Window\struct_DATA</Filter>
     </ClInclude>
     <ClInclude Include="CustomUI.h">
-      <Filter>헤더 파일\ui_GUI</Filter>
+      <Filter>헤더 파일\Window\ui_GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockWrapper.h">
+      <Filter>헤더 파일\FFT\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="FFmpegWrapper.h">
+      <Filter>헤더 파일\FFT\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonHeader.h">
+      <Filter>헤더 파일\Common</Filter>
     </ClInclude>
     <ClInclude Include="vector2d.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>헤더 파일\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -94,3 +94,32 @@ void CustomUI::Button::Render(HDC hdc) {
 
 	DeleteObject(SelectObject(hdc, OldBrush));
 }
+
+void CustomUI::Button::Render(Gdiplus::Graphics* p_graphic) {
+	if (!Active)
+		return;
+	
+	Gdiplus::SolidBrush solidbrush(Gdiplus::Color(0,0,0));
+	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 1);
+
+	//Fill Rectangle With Color
+	//Color is selected by presence of highlight
+	if (Highlight) {
+		solidbrush.SetColor(Gdiplus::Color(ConvertColorRefToGdiPlusColor(highlightColor)));
+	}
+	else {
+		solidbrush.SetColor(Gdiplus::Color(ConvertColorRefToGdiPlusColor(defaultColor)));
+	}
+
+	Gdiplus::Rect crt(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+	p_graphic->FillRectangle(&solidbrush, crt);
+	p_graphic->DrawRectangle(&solidpen, crt);
+
+	Gdiplus::RectF crtF(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+	Gdiplus::SolidBrush text_brush(Gdiplus::Color(0, 0, 0));
+	Gdiplus::Font font(L"Arial", 12);
+	Gdiplus::StringFormat format;
+	format.SetAlignment(Gdiplus::StringAlignmentCenter);
+	format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+	p_graphic->DrawString(Btext, lstrlen(Btext), &font, crtF, &format, &text_brush);
+}

@@ -7,7 +7,7 @@
 namespace melo {
 	const cpx img(0.0, 1.0);
 
-	void HEllipse(HDC hdc, vector2d center, double rad);
+	void HEllipse(Gdiplus::Graphics* p_graphic, vector2d center, double rad);
 
 	int PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBlock* spectrum_block, SpectrumOption option);
 }

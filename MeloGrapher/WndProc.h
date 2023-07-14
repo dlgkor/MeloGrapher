@@ -15,3 +15,11 @@ LRESULT CALLBACK WndProc_Main(HWND, UINT, WPARAM, LPARAM);
 void PaintProc(MeloWndData* main_data);
 
 void PaintSpectrum(MeloWndData* main_data, Gdiplus::Graphics* p_graphic);
+
+void PaintMenu(CustomUI::Menu* menu, Gdiplus::Graphics* p_graphic);
+
+//WM_MOUSEMOVE
+void MenuMouseMove(CustomUI::Menu* menu, vector2d changed_pos); //Update Menu
+
+//WM_LBUTTONDOWN
+void MenuMouseClick(CustomUI::Menu* menu, vector2d changed_pos); //Update Menu

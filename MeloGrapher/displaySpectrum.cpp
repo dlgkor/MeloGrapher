@@ -1,7 +1,13 @@
 #include"displaySpectrum.h"
 
-void melo::HEllipse(HDC hdc, vector2d center, double rad) {
-	Ellipse(hdc, center.x - rad, center.y - rad, center.x + rad, center.y + rad);
+void melo::HEllipse(Gdiplus::Graphics* p_graphic, vector2d center, double rad) {
+	//Gdiplus::SolidBrush solidbrush(Gdiplus::Color(200, 255, 255, 255));
+	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 1);
+
+	Gdiplus::Rect circle_crt(center.x - rad, center.y - rad, rad * 2, rad * 2);
+	//p_graphic->FillEllipse(&solidbrush, circle_crt);
+	p_graphic->DrawEllipse(&solidpen, circle_crt);
+
 }
 
 int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBlock* spectrum_block, SpectrumOption option) {
@@ -36,7 +42,7 @@ int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBl
 		amp = 0.2;
 		f[ic] = max(f[ic], output[i + minFqpoint] * amp);
 
-		if (ic > option.max_height) {
+		if (f[ic] > option.max_height) {
 			f[ic] = option.max_height;
 		}
 		else if (f[ic] < 0) {
