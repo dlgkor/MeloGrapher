@@ -7,8 +7,7 @@
 */
 LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	MeloWndData* main_data = reinterpret_cast<MeloWndData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-	//const char* filename = "C:/Users/ydhan/dlg project/mp3/Hit the Floor.mp3";
-	const char* filename = "C:/Users/ydhan/dlg project/mp3/test.mp3";
+	const char* filename = "D:/mp3/Sneaky Driver.mp3";
 	switch (iMessage) {
 	case WM_CREATE:
 		SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);

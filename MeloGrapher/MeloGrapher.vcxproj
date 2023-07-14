@@ -28,7 +28,9 @@
     <ClCompile Include="CustomWindow.cpp" />
     <ClCompile Include="displaySpectrum.cpp" />
     <ClCompile Include="FFmpegWrapper.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="MainPaintProc.cpp" />
     <ClCompile Include="MainWndProc.cpp" />
     <ClCompile Include="RootWndProc.cpp" />
@@ -52,8 +54,12 @@
     <ClInclude Include="spectrumUtils.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="WaveOut.h" />
-    <ClInclude Include="WindowWrapper.h" />
-    <ClInclude Include="WindowWrapper.cpp" />
+    <ClInclude Include="WindowWrapper.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClCompile Include="WindowWrapper.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MeloGrapher.rc" />
@@ -147,12 +153,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ydhan\dlg project\library\ffmpeg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\library\ffmpeg-N-111373-g7eeef72c67-win64-gpl-shared\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\ydhan\dlg project\library\ffmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\library\ffmpeg-N-111373-g7eeef72c67-win64-gpl-shared\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>avcodec.lib;avutil.lib;avformat.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
