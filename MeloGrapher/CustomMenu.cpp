@@ -1,7 +1,8 @@
 #include"CustomUI.h"
 
 CustomUI::Menu::Menu() {
-	PlaneSize = 140.0f;
+	default_plansize = 100.0f;
+	PlaneSize = 100.0f;
 
 	CurrentState = DEFUALT;
 	NextState = NONE;
@@ -14,21 +15,21 @@ CustomUI::Menu::Menu() {
 	btnnum = 4;
 
 	stateCube[0].plane[0].p[0] = { 0,0 };
-	stateCube[0].plane[0].p[1] = { -PlaneSize * float(sqrt(3)) / 2, PlaneSize / 2 };
-	stateCube[0].plane[0].p[2] = { 0,PlaneSize };
-	stateCube[0].plane[0].p[3] = { PlaneSize * float(sqrt(3)) / 2,PlaneSize / 2 };
+	stateCube[0].plane[0].p[1] = { -default_plansize * float(sqrt(3)) / 2, default_plansize / 2 };
+	stateCube[0].plane[0].p[2] = { 0,default_plansize };
+	stateCube[0].plane[0].p[3] = { default_plansize * float(sqrt(3)) / 2,default_plansize / 2 };
 
 
 	stateCube[0].plane[1].p[0] = { 0,0 };
-	stateCube[0].plane[1].p[1] = { PlaneSize * float(sqrt(3)) / 2, PlaneSize / 2 };
-	stateCube[0].plane[1].p[2] = { PlaneSize * float(sqrt(3)) / 2, -PlaneSize / 2 };
-	stateCube[0].plane[1].p[3] = { 0,-PlaneSize };
+	stateCube[0].plane[1].p[1] = { default_plansize * float(sqrt(3)) / 2, default_plansize / 2 };
+	stateCube[0].plane[1].p[2] = { default_plansize * float(sqrt(3)) / 2, -default_plansize / 2 };
+	stateCube[0].plane[1].p[3] = { 0,-default_plansize };
 
 
 	stateCube[0].plane[2].p[0] = { 0,0 };
-	stateCube[0].plane[2].p[1] = { 0,-PlaneSize };
-	stateCube[0].plane[2].p[2] = { -PlaneSize * float(sqrt(3)) / 2,-PlaneSize / 2 };
-	stateCube[0].plane[2].p[3] = { -PlaneSize * float(sqrt(3)) / 2, PlaneSize / 2 };
+	stateCube[0].plane[2].p[1] = { 0,-default_plansize };
+	stateCube[0].plane[2].p[2] = { -default_plansize * float(sqrt(3)) / 2,-default_plansize / 2 };
+	stateCube[0].plane[2].p[3] = { -default_plansize * float(sqrt(3)) / 2, default_plansize / 2 };
 
 
 	stateCube[1].plane[0].p[0] = { -PlaneSize, -PlaneSize };
@@ -95,7 +96,6 @@ void CustomUI::Menu::ResetMenu(HWND hwnd) {
 	btnlist.push_back(Button(vector2d(-PlaneSize * 0.9, 0), vector2d(-PlaneSize * 0.1, PlaneSize * 0.5), L"읽어오기", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 10));
 	btnlist.push_back(Button(vector2d(PlaneSize * 0.1, 0), vector2d(PlaneSize * 0.9, PlaneSize * 0.5), L"플레이/정지", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 11));
 	btnlist.push_back(Button(vector2d(-PlaneSize * 0.5, -PlaneSize * 0.5), vector2d(PlaneSize * 0.5, PlaneSize * 0.5), L"종료", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 13));
-
 }
 
 CustomUI::PlaneState CustomUI::Menu::DetectMouse(vector2d mousepos) {

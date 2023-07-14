@@ -60,6 +60,7 @@ namespace CustomUI {
 
 	class Menu {
 	private:
+		float default_plansize;
 		float PlaneSize;
 		//Cube defaultCube;
 		Cube stateCube[4];

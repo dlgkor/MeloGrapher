@@ -1,13 +1,20 @@
 #include"displaySpectrum.h"
 
 void melo::HEllipse(Gdiplus::Graphics* p_graphic, vector2d center, double rad) {
-	//Gdiplus::SolidBrush solidbrush(Gdiplus::Color(200, 255, 255, 255));
-	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 1);
+	Gdiplus::SolidBrush solidbrush(Gdiplus::Color(255, 255, 255));
+	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 1.5);
 
-	Gdiplus::Rect circle_crt(center.x - rad, center.y - rad, rad * 2, rad * 2);
-	//p_graphic->FillEllipse(&solidbrush, circle_crt);
-	p_graphic->DrawEllipse(&solidpen, circle_crt);
+	Gdiplus::Rect solid_circle(center.x - rad, center.y - rad, rad * 2, rad * 2);
+	p_graphic->FillEllipse(&solidbrush, solid_circle);
+	p_graphic->DrawEllipse(&solidpen, solid_circle);
 
+
+
+	Gdiplus::SolidBrush transparent_brush(Gdiplus::Color(0, 0, 255));
+	double rad_2 = rad - 6;
+	Gdiplus::Rect transparent_circle(center.x - rad_2, center.y - rad_2, rad_2 * 2, rad_2 * 2);
+	p_graphic->FillEllipse(&transparent_brush, transparent_circle);
+	p_graphic->DrawEllipse(&solidpen, solid_circle);
 }
 
 int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBlock* spectrum_block, SpectrumOption option) {

@@ -44,7 +44,6 @@ LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 		return 0;
 	case WM_DESTROY:
 		main_data->block_wrapper->close_file();
-		if (main_data->this_window->w_hbit) DeleteObject(main_data->this_window->w_hbit);
 		PostMessage(main_data->root_hwnd, WM_DESTROY, NULL, NULL);
 		return 0;
 	}

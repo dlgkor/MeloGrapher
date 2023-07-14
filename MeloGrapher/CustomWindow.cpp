@@ -24,7 +24,6 @@ CustomWindow::CustomWindow() {
 	locationX = CW_USEDEFAULT; locationY = CW_USEDEFAULT;
 
 	w_hWnd = NULL;
-	w_hbit = NULL;
 
 	gdi_bitmap = nullptr;
 }
@@ -44,12 +43,11 @@ void CustomWindow::SetScreenLocation(int _locateX, int _locateY) {
 void CustomWindow::Apply() {
 	//apply and show change window
 	MoveWindow(w_hWnd, locationX, locationY, screenWidth, screenHeight, TRUE);
-	if (w_hbit)
-		DeleteObject(w_hbit);
 
-	w_hdc = GetDC(w_hWnd);
-	w_hbit = CreateCompatibleBitmap(w_hdc, screenWidth, screenHeight);
-	ReleaseDC(w_hWnd, w_hdc);
+	//renew bitmap
+	if (gdi_bitmap != nullptr)
+		delete gdi_bitmap;
+	gdi_bitmap = new Gdiplus::Bitmap(screenWidth, screenHeight);
 }
 
 void CustomWindow::registerDefaultWndClass(HINSTANCE hInstance, WNDPROC WndProc, LPCWSTR lpszClass) {
@@ -79,6 +77,6 @@ HWND CustomWindow::CreateCustomWindow(HINSTANCE hInstance, WNDPROC WndProc, LPCW
 }
 
 CustomWindow::~CustomWindow() {
-	if (w_hbit)
-		DeleteObject(w_hbit);
+	if (gdi_bitmap != nullptr)
+		DeleteObject(gdi_bitmap);
 }

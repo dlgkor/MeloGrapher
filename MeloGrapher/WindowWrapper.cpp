@@ -99,8 +99,10 @@ int MeloWindow::create_main() {
 	main_window.SetScreenLocation((screen_width - main_window.screenWidth) / 2, (sceen_height - main_window.screenHeight) / 2);
 
 	main_window.w_hWnd = CreateWindow(lpszClass, L"MeloGrapher", WS_OVERLAPPEDWINDOW,
-		main_window.locationX, main_window.locationY, main_window.screenWidth, main_window.screenHeight,
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		root_hwnd, (HMENU)NULL, hInstance, NULL); //root 윈도우와 소유-피소유 관계를 설정해준다
+
+	main_window.Apply();
 
 	set_main_data();
 	return 0;

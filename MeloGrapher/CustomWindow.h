@@ -10,7 +10,6 @@ public:
 	HDC w_hdc;
 	PAINTSTRUCT w_ps;
 
-	HBITMAP w_hbit, w_oldbit;
 	Gdiplus::Bitmap* gdi_bitmap;
 public:
 	CustomWindow();
