@@ -1,25 +1,38 @@
 #include"displaySpectrum.h"
 
+
+
 void melo::HEllipse(Gdiplus::Graphics* p_graphic, vector2d center, double rad) {
-	Gdiplus::SolidBrush solidbrush(Gdiplus::Color(255, 255, 255));
-	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 1.5);
+	Gdiplus::SolidBrush solidbrush(Gdiplus::Color(225,225,225));
+	
+	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 3);
 
 	Gdiplus::Rect solid_circle(center.x - rad, center.y - rad, rad * 2, rad * 2);
 	p_graphic->FillEllipse(&solidbrush, solid_circle);
 	p_graphic->DrawEllipse(&solidpen, solid_circle);
 
-
-
 	Gdiplus::SolidBrush transparent_brush(Gdiplus::Color(0, 0, 255));
-	double rad_2 = rad - 6;
+	double rad_2 = rad - 8;
 	Gdiplus::Rect transparent_circle(center.x - rad_2, center.y - rad_2, rad_2 * 2, rad_2 * 2);
 	p_graphic->FillEllipse(&transparent_brush, transparent_circle);
-	p_graphic->DrawEllipse(&solidpen, solid_circle);
+	p_graphic->DrawEllipse(&solidpen, transparent_circle);
+
+	Arc_Design(p_graphic, center, rad - 30);
 }
+
+void melo::Arc_Design(Gdiplus::Graphics* p_graphic, vector2d center, double rad) {
+	Gdiplus::Rect Arc_rect(center.x - rad, center.y - rad, rad * 2, rad * 2);
+	Gdiplus::Pen solidpen(Gdiplus::Color(225, 225, 225), 10);
+
+	p_graphic->DrawArc(&solidpen, Arc_rect, 0, 60);
+	p_graphic->DrawArc(&solidpen, Arc_rect, 120, 60);
+	p_graphic->DrawArc(&solidpen, Arc_rect, 240, 60);
+}
+
 
 int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBlock* spectrum_block, SpectrumOption option) {
 	Gdiplus::Pen* p_pen;
-	Gdiplus::SolidBrush solidbrush1(Gdiplus::Color(255, 120, 193, 243));
+	Gdiplus::SolidBrush solidbrush1(Gdiplus::Color(254, 83, 187));
 
 	if (spectrum_block->get_total_size() == 0)
 		return 0;
@@ -62,7 +75,7 @@ int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBl
 	vector2d p1, p2;
 	vector2d tanline;
 
-	p_pen = new Gdiplus::Pen(Gdiplus::Color(255, 0, 0, 0), 1);
+	p_pen = new Gdiplus::Pen(Gdiplus::Color(255, 0, 0, 0), 3);
 
 	Gdiplus::Point p_point[500];
 

@@ -82,9 +82,21 @@ CustomUI::Menu::Menu() {
 
 
 	for (int i = 0; i < 4; i++) {
+		/*
 		stateCube[i].plane[0].color = RGB(200, 200, 200);
 		stateCube[i].plane[1].color = RGB(225, 225, 225);
 		stateCube[i].plane[2].color = RGB(240, 240, 240);
+		*/
+		
+		/*
+		stateCube[i].plane[0].color = RGB(245, 211, 0);
+		stateCube[i].plane[1].color = RGB(245, 211, 0);
+		stateCube[i].plane[2].color = RGB(245, 211, 0);
+		*/
+
+		stateCube[i].plane[0].color = RGB(225, 225, 225);
+		stateCube[i].plane[1].color = RGB(225, 225, 225);
+		stateCube[i].plane[2].color = RGB(225, 225, 225);
 	}
 
 	//need to set PlaneCube

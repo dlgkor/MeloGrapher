@@ -65,7 +65,7 @@ int MeloWindow::set_main_data() {
 	main_data.spectrum_option.max_out_frequency = 4000;
 	main_data.spectrum_option.min_out_frequency = 10;
 	main_data.spectrum_option.max_height = 150;
-	main_data.spectrum_option.n_graph = 200;
+	main_data.spectrum_option.n_graph = 150;
 	main_data.spectrum_option.r_center = { 0, 0 };
 	main_data.spectrum_option.radius = 200;
 

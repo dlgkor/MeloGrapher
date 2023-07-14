@@ -52,7 +52,7 @@ void CustomUI::Plane::Render(HDC hdc) {
 
 void CustomUI::Plane::Render(Gdiplus::Graphics* p_graphic) {
 	Gdiplus::SolidBrush solidbrush(ConvertColorRefToGdiPlusColor(color));
-	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 1);
+	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 3);
 
 	Gdiplus::Point p_point[] = {
 			Gdiplus::Point(p[0].x, p[0].y),

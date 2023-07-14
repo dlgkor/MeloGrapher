@@ -9,5 +9,7 @@ namespace melo {
 
 	void HEllipse(Gdiplus::Graphics* p_graphic, vector2d center, double rad);
 
+	void Arc_Design(Gdiplus::Graphics* p_graphic, vector2d center, double rad);
+
 	int PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBlock* spectrum_block, SpectrumOption option);
 }
