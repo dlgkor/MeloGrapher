@@ -23,6 +23,7 @@
     <ClCompile Include="BlockWrapper.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="CustomButton.cpp" />
+    <ClCompile Include="CustomGrapButton.cpp" />
     <ClCompile Include="CustomMenu.cpp" />
     <ClCompile Include="CustomPlane.cpp" />
     <ClCompile Include="CustomUIUtils.cpp" />

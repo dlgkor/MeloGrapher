@@ -10,12 +10,24 @@ void CommandProc(MeloWndData* main_data, WPARAM wParam) {
 		main_data->block_wrapper->seek(0);
 		main_data->block_wrapper->play_file();
 		return;
+    case 12:
+        MoveWindow(main_data);
+        return;
 	case 13:
 		DestroyWindow(main_data->this_window->w_hWnd);
 		return;
 	default:
 		return;
 	}
+}
+
+void MoveWindow(MeloWndData* main_data) {
+
+    POINT cursorPos; // 마우스 좌표를 저장할 POINT 구조체
+    GetCursorPos(&cursorPos); // 마우스의 화면 좌표 가져오기
+
+    main_data->this_window->SetScreenLocation(cursorPos.x - (main_data->this_window->screenWidth/2), cursorPos.y - (main_data->this_window->screenHeight / 2));
+    main_data->this_window->Apply();
 }
 
 

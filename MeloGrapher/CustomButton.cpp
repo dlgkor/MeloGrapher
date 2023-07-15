@@ -67,6 +67,13 @@ void CustomUI::Button::Click(vector2d mousepos) {
 	SendMessage(parent, WM_COMMAND, MAKEWORD(id, 0), MAKEWORD(0, 0));
 }
 
+void CustomUI::Button::Release(vector2d mousepos) {
+	if (!Active)
+		return;
+
+	//nothing need to be done
+}
+
 
 void CustomUI::Button::Render(HDC hdc) {
 	if (!Active)

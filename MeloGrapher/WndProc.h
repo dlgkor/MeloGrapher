@@ -24,9 +24,14 @@ void MenuMouseMove(CustomUI::Menu* menu, vector2d changed_pos); //Update Menu
 //WM_LBUTTONDOWN
 void MenuMouseClick(CustomUI::Menu* menu, vector2d changed_pos); //Update Menu
 
+//WM_LBUTTONUP
+void MenuMouseRelease(CustomUI::Menu* menu, vector2d changed_pos);
+
 //WM_COMMAND
 void CommandProc(MeloWndData* main_data, WPARAM wParam);
 
 int CommandOpenFile(MeloWndData* main_data);
 
 char* tchar2char(TCHAR* unicode);
+
+void MoveWindow(MeloWndData* main_data);

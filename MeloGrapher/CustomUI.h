@@ -24,16 +24,31 @@ namespace CustomUI {
 		Button(vector2d _p1, vector2d _p2, const TCHAR* _Btext,
 			COLORREF _default, COLORREF _highlight, HWND _parent, int _id);
 
-		void Set(vector2d _p1, vector2d _p2, const TCHAR* _Btext,
+		virtual void Set(vector2d _p1, vector2d _p2, const TCHAR* _Btext,
 			COLORREF _default, COLORREF _highlight, HWND _parent, int _id);
 
 		void SetActive(bool active);
 		bool DetectMouse(vector2d mousepos);
-		void isHighlight(vector2d mousepos);
-		void Click(vector2d mousepos);
+		virtual void isHighlight(vector2d mousepos);
+		virtual void Click(vector2d mousepos);
+		virtual void Release(vector2d mousepos);
 		void Render(HDC hdc);
-		void Render(Gdiplus::Graphics* p_graphic);
+		virtual void Render(Gdiplus::Graphics* p_graphic);
 	};
+
+	class GrapButton : public Button {
+	public:
+		bool grapped;
+	public:
+		GrapButton();
+		virtual void Set(vector2d _p1, vector2d _p2,
+			COLORREF _default, COLORREF _highlight, HWND _parent, int _id);
+		void Move(vector2d mousepos);
+		void Grap(vector2d mousepos);
+		void Release(vector2d mousepos);
+		void Render_GrapButton(Gdiplus::Graphics* p_graphic);
+	};
+
 
 
 	class Plane {
@@ -70,9 +85,9 @@ namespace CustomUI {
 		PlaneState CurrentState;
 		PlaneState NextState;
 
-		int btnnum;
-		//Button btnList[10];
 		std::vector<Button> btnlist;
+		GrapButton grapbtn;
+
 
 		float transitionTime;
 		float accumulatedTime;
@@ -85,6 +100,9 @@ namespace CustomUI {
 		PlaneState DetectMouse(vector2d mousepos);
 		void TransitionAnimation(float deltaT);
 		void Update(vector2d mousepos, bool clicked);
+		void update_mousedown(vector2d mousepos);
+		void update_mouseup(vector2d mousepos);
+		void update_mousemove(vector2d mousepos);
 		void Render(HDC hdc, float deltaT);
 		void Render(Gdiplus::Graphics* p_graphic, float deltaT);
 	};

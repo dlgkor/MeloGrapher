@@ -129,6 +129,9 @@
     <ClCompile Include="MainCommandProc.cpp">
       <Filter>소스 파일\PROC</Filter>
     </ClCompile>
+    <ClCompile Include="CustomGrapButton.cpp">
+      <Filter>소스 파일\CustomUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h">

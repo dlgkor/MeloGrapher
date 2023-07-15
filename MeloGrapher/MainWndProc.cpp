@@ -21,6 +21,10 @@ LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 		MenuMouseClick(&main_data->custom_menu, vector2d((double)(LOWORD(lParam) - (main_data->this_window->screenWidth / 2)),
 			(double)(HIWORD(lParam) - (main_data->this_window->screenHeight / 2))));
 		return 0;
+	case WM_LBUTTONUP:
+		MenuMouseRelease(&main_data->custom_menu, vector2d((double)(LOWORD(lParam) - (main_data->this_window->screenWidth / 2)),
+			(double)(HIWORD(lParam) - (main_data->this_window->screenHeight / 2))));
+		return 0;
 	case WM_COMMAND:
 		CommandProc(main_data, wParam);
 		return 0;

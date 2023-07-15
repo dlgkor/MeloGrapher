@@ -12,8 +12,6 @@ CustomUI::Menu::Menu() {
 	targetChange = false;
 	animationOn = false;
 
-	btnnum = 4;
-
 	stateCube[0].plane[0].p[0] = { 0,0 };
 	stateCube[0].plane[0].p[1] = { -default_plansize * float(sqrt(3)) / 2, default_plansize / 2 };
 	stateCube[0].plane[0].p[2] = { 0,default_plansize };
@@ -108,6 +106,9 @@ void CustomUI::Menu::ResetMenu(HWND hwnd) {
 	btnlist.push_back(Button(vector2d(-PlaneSize * 0.9, 0), vector2d(-PlaneSize * 0.1, PlaneSize * 0.5), L"읽어오기", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 10));
 	btnlist.push_back(Button(vector2d(PlaneSize * 0.1, 0), vector2d(PlaneSize * 0.9, PlaneSize * 0.5), L"플레이/정지", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 11));
 	btnlist.push_back(Button(vector2d(-PlaneSize * 0.5, -PlaneSize * 0.5), vector2d(PlaneSize * 0.5, PlaneSize * 0.5), L"종료", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 13));
+	grapbtn.Set(vector2d(-PlaneSize * 0.5, -PlaneSize * 0.5), vector2d(PlaneSize * 0.5, PlaneSize * 0.5), RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 12);
+
+	//Add GrapButton
 }
 
 CustomUI::PlaneState CustomUI::Menu::DetectMouse(vector2d mousepos) {
@@ -154,6 +155,7 @@ void CustomUI::Menu::TransitionAnimation(float deltaT) {
 			btnlist.at(1).Active = false;
 			break;
 		case CustomUI::PLANE3:
+			grapbtn.Active = false;
 			break;
 		case CustomUI::NONE:
 			break;
@@ -173,6 +175,7 @@ void CustomUI::Menu::TransitionAnimation(float deltaT) {
 			btnlist.at(1).Active = true;
 			break;
 		case CustomUI::PLANE3:
+			grapbtn.Active = true;
 			break;
 		case CustomUI::NONE:
 			break;
@@ -203,7 +206,6 @@ void CustomUI::Menu::TransitionAnimation(float deltaT) {
 void CustomUI::Menu::Update(vector2d mousepos, bool clicked) {
 	//triggered when mouse move,click
 
-
 	if (clicked) {
 		PlaneState instant = DetectMouse(mousepos);
 		if (instant != NextState) {
@@ -221,12 +223,41 @@ void CustomUI::Menu::Update(vector2d mousepos, bool clicked) {
 		return;
 	}
 
-	//버튼개수 나중에 수정필요
+	for (int i = 0; i < btnlist.size(); i++) {
+		btnlist.at(i).isHighlight(mousepos);
 
+		//Send Command Message
+	}
+
+}
+
+void CustomUI::Menu::update_mousedown(vector2d mousepos) {
+	PlaneState instant = DetectMouse(mousepos);
+	if (instant != NextState) {
+		if (!animationOn) {
+			targetChange = true;
+			NextState = instant;
+		}
+	}
+
+
+	for (int i = 0; i < btnlist.size(); i++) {
+		btnlist.at(i).Click(mousepos);
+	}
+	grapbtn.Grap(mousepos);
+
+	return;
+}
+
+void CustomUI::Menu::update_mousemove(vector2d mousepos) {
 	for (int i = 0; i < btnlist.size(); i++) {
 		btnlist.at(i).isHighlight(mousepos);
 	}
+	grapbtn.Move(mousepos);
+}
 
+void CustomUI::Menu::update_mouseup(vector2d mousepos) {
+	grapbtn.Release(mousepos);
 }
 
 void CustomUI::Menu::Render(HDC hdc, float deltaT) {
@@ -262,5 +293,6 @@ void CustomUI::Menu::Render(Gdiplus::Graphics* p_graphic, float deltaT) {
 		for (int i = 0; i < btnlist.size(); i++) {
 			btnlist.at(i).Render(p_graphic);
 		}
+		grapbtn.Render_GrapButton(p_graphic);
 	}
 }
