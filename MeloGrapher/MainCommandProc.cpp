@@ -20,24 +20,50 @@ void CommandProc(MeloWndData* main_data, WPARAM wParam) {
 
 
 int CommandOpenFile(MeloWndData* main_data) {
-	OPENFILENAME OFN;
-	TCHAR szFileName[512];
 
-	memset(&OFN, 0, sizeof(OPENFILENAME));
-	OFN.lStructSize = sizeof(OPENFILENAME);
-	OFN.hwndOwner = main_data->this_window->w_hWnd;
-	OFN.lpstrFilter = L"모든 파일\0*.*\0mp3_file\0*.mp3";
-	OFN.lpstrFile = szFileName;
-	OFN.nMaxFile = 512;
-	OFN.lpstrInitialDir = L".";
+    SetWindowPos(main_data->this_window->w_hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 
-	if (0 == GetOpenFileName(&OFN)) {
-		MessageBeep(0);
-		return -1;
-	}
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+        COINIT_DISABLE_OLE1DDE);
+    if (SUCCEEDED(hr))
+    {
+        IFileOpenDialog* pFileOpen;
 
-	main_data->block_wrapper->close_file(); //close if file is opened
-	main_data->block_wrapper->open_file(tchar2char(szFileName));
+        // Create the FileOpenDialog object.
+        hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+            IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+        if (SUCCEEDED(hr))
+        {
+            // Show the Open dialog box.
+            hr = pFileOpen->Show(NULL);
+
+            // Get the file name from the dialog box.
+            if (SUCCEEDED(hr))
+            {
+                IShellItem* pItem;
+                hr = pFileOpen->GetResult(&pItem);
+                if (SUCCEEDED(hr))
+                {
+                    PWSTR pszFilePath;
+                    hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+                    // Display the file name to the user.
+                    if (SUCCEEDED(hr))
+                    {
+                        main_data->block_wrapper->close_file(); //close if file is opened
+                        main_data->block_wrapper->open_file(tchar2char(pszFilePath));
+                    }
+                    pItem->Release();
+                }
+            }
+            pFileOpen->Release();
+        }
+        CoUninitialize();
+    }
+
+    SetWindowPos(main_data->this_window->w_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    return 0;
 }
 
 char* tchar2char(TCHAR* unicode)

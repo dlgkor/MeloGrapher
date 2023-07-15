@@ -1,6 +1,7 @@
 #pragma once
 
 #include<Windows.h>
+#include<ShObjIdl.h>
 #pragma comment(lib, "winmm.lib")
 #include"resource.h"
 
