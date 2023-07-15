@@ -126,6 +126,9 @@
     <ClCompile Include="MainMouseProc.cpp">
       <Filter>소스 파일\PROC</Filter>
     </ClCompile>
+    <ClCompile Include="MainCommandProc.cpp">
+      <Filter>소스 파일\PROC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h">

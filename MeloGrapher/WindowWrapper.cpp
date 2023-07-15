@@ -23,7 +23,7 @@ int MeloWindow::create_root() {
 	wcex.lpfnWndProc = WndProc_Root;
 	wcex.hInstance = hInstance;
 	wcex.lpszClassName = lpszClass;
-	wcex.cbWndExtra = sizeof(MeloRootWndData); //extra memory for setptr and getptr
+	wcex.cbWndExtra = sizeof(MeloRootWndData*); //extra memory for setptr and getptr
 	RegisterClassEx(&wcex);
 
 	root_hwnd = CreateWindow(lpszClass, L"MeloGrapher", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
@@ -81,7 +81,7 @@ int MeloWindow::create_main() {
 
 	WNDCLASS WndClass;
 	WndClass.cbClsExtra = 0;
-	WndClass.cbWndExtra = sizeof(MeloWndData);
+	WndClass.cbWndExtra = sizeof(MeloWndData*);
 	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	WndClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(MAIN_ICON));

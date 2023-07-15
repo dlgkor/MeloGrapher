@@ -32,6 +32,7 @@
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="MainCommandProc.cpp" />
     <ClCompile Include="MainMouseProc.cpp" />
     <ClCompile Include="MainPaintProc.cpp" />
     <ClCompile Include="MainWndProc.cpp" />
