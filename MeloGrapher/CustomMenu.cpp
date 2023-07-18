@@ -7,7 +7,7 @@ CustomUI::Menu::Menu() {
 	CurrentState = DEFUALT;
 	NextState = NONE;
 
-	transitionTime = 0.15f;
+	transitionTime = 0.05f;
 	accumulatedTime = 0.0f;
 	targetChange = false;
 	animationOn = false;
@@ -106,7 +106,7 @@ void CustomUI::Menu::ResetMenu(HWND hwnd) {
 	btnlist.push_back(Button(vector2d(-PlaneSize * 0.9, 0), vector2d(-PlaneSize * 0.1, PlaneSize * 0.5), L"읽어오기", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 10));
 	btnlist.push_back(Button(vector2d(PlaneSize * 0.1, 0), vector2d(PlaneSize * 0.9, PlaneSize * 0.5), L"플레이/정지", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 11));
 	btnlist.push_back(Button(vector2d(-PlaneSize * 0.5, -PlaneSize * 0.5), vector2d(PlaneSize * 0.5, PlaneSize * 0.5), L"종료", RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 13));
-	grapbtn.Set(vector2d(-PlaneSize * 0.5, -PlaneSize * 0.5), vector2d(PlaneSize * 0.5, PlaneSize * 0.5), RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 12);
+	grapbtn.Set(vector2d(-PlaneSize * 0.35, -PlaneSize * 0.35), vector2d(PlaneSize * 0.35, PlaneSize * 0.35), RGB(255, 255, 255), RGB(100, 100, 100), hwnd, 12);
 
 	//Add GrapButton
 }

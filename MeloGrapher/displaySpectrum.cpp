@@ -5,7 +5,7 @@
 void melo::HEllipse(Gdiplus::Graphics* p_graphic, vector2d center, double rad) {
 	Gdiplus::SolidBrush solidbrush(Gdiplus::Color(225,225,225));
 	
-	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 3);
+	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 0.1);
 
 	Gdiplus::Rect solid_circle(center.x - rad, center.y - rad, rad * 2, rad * 2);
 	p_graphic->FillEllipse(&solidbrush, solid_circle);
@@ -17,16 +17,26 @@ void melo::HEllipse(Gdiplus::Graphics* p_graphic, vector2d center, double rad) {
 	p_graphic->FillEllipse(&transparent_brush, transparent_circle);
 	p_graphic->DrawEllipse(&solidpen, transparent_circle);
 
-	Arc_Design(p_graphic, center, rad - 30);
+	//Arc_Design(p_graphic, center, rad - 25);
 }
 
 void melo::Arc_Design(Gdiplus::Graphics* p_graphic, vector2d center, double rad) {
 	Gdiplus::Rect Arc_rect(center.x - rad, center.y - rad, rad * 2, rad * 2);
-	Gdiplus::Pen solidpen(Gdiplus::Color(225, 225, 225), 10);
 
-	p_graphic->DrawArc(&solidpen, Arc_rect, 0, 60);
-	p_graphic->DrawArc(&solidpen, Arc_rect, 120, 60);
-	p_graphic->DrawArc(&solidpen, Arc_rect, 240, 60);
+	double s_rad = rad - 10;
+	Gdiplus::Rect s_Arc_rect(center.x - s_rad, center.y - s_rad, s_rad * 2, s_rad * 2);
+
+	Gdiplus::SolidBrush solidbrush(Gdiplus::Color(255, 255, 255));
+	Gdiplus::SolidBrush nonebrush(Gdiplus::Color(0, 0, 255));
+	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 0.1);
+
+	for (int i = 0; i < 3; i++) {
+		int start_rad = 120 * i;
+		p_graphic->FillPie(&solidbrush, Arc_rect, start_rad, 60);
+		p_graphic->DrawPie(&solidpen, Arc_rect, start_rad, 60);
+		p_graphic->FillPie(&nonebrush, s_Arc_rect, start_rad - 30, 120);
+		p_graphic->DrawArc(&solidpen, s_Arc_rect, start_rad, 60);
+	}
 }
 
 
@@ -46,7 +56,7 @@ int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBl
 	if (Cut == 0)
 		return 0;
 
-	double amp = 15.0;
+	double amp = 0.15;
 
 	double* f = new double[option.n_graph];
 	for (int i = 0; i < option.n_graph; i++) {
@@ -59,7 +69,6 @@ int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBl
 
 	for (int i = 0; i < option.n_graph * Cut; i++) {
 		ic = i / Cut;
-		amp = 0.2;
 		f[ic] = max(f[ic], output[i + minFqpoint] * amp);
 
 		if (f[ic] > option.max_height) {
@@ -75,7 +84,7 @@ int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBl
 	vector2d p1, p2;
 	vector2d tanline;
 
-	p_pen = new Gdiplus::Pen(Gdiplus::Color(255, 0, 0, 0), 3);
+	p_pen = new Gdiplus::Pen(Gdiplus::Color(255, 0, 0, 0), 0.1);
 
 	Gdiplus::Point p_point[500];
 

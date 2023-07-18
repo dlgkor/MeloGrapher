@@ -46,5 +46,5 @@ void PaintSpectrum(MeloWndData* main_data, Gdiplus::Graphics* p_graphic) {
 }
 
 void PaintMenu(CustomUI::Menu* menu, Gdiplus::Graphics* p_graphic) {
-	menu->Render(p_graphic, 0.02f);
+	menu->Render(p_graphic, 0.01f);
 }

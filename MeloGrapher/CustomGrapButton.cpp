@@ -65,7 +65,7 @@ void CustomUI::GrapButton::Render_GrapButton(Gdiplus::Graphics* p_graphic) {
 		return;
 
 	Gdiplus::SolidBrush solidbrush(Gdiplus::Color(0, 0, 0));
-	Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 1);
+	//Gdiplus::Pen solidpen(Gdiplus::Color(0, 0, 0), 3);
 
 	//Fill Rectangle With Color
 	//Color is selected by presence of highlight
@@ -78,5 +78,5 @@ void CustomUI::GrapButton::Render_GrapButton(Gdiplus::Graphics* p_graphic) {
 
 	Gdiplus::Rect crt(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
 	p_graphic->FillRectangle(&solidbrush, crt);
-	p_graphic->DrawRectangle(&solidpen, crt);
+	//p_graphic->DrawRectangle(&solidpen, crt);
 }
