@@ -19,20 +19,51 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="audioData.cpp" />
+    <ClCompile Include="BlockWrapper.cpp" />
+    <ClCompile Include="BufferManager.cpp" />
+    <ClCompile Include="CustomButton.cpp" />
+    <ClCompile Include="CustomGrapButton.cpp" />
+    <ClCompile Include="CustomMenu.cpp" />
+    <ClCompile Include="CustomPlane.cpp" />
+    <ClCompile Include="CustomUIUtils.cpp" />
+    <ClCompile Include="CustomWindow.cpp" />
+    <ClCompile Include="displaySpectrum.cpp" />
+    <ClCompile Include="FFmpegWrapper.cpp" />
+    <ClCompile Include="main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="MainCommandProc.cpp" />
+    <ClCompile Include="MainMouseProc.cpp" />
+    <ClCompile Include="MainPaintProc.cpp" />
+    <ClCompile Include="MainWndProc.cpp" />
+    <ClCompile Include="RootWndProc.cpp" />
+    <ClCompile Include="spectrumData.cpp" />
+    <ClCompile Include="SpectrumUtils.cpp" />
+    <ClCompile Include="vector2d.cpp" />
+    <ClCompile Include="WaveOut.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="CommonHeader.h" />
+    <ClInclude Include="CustomUI.h" />
+    <ClInclude Include="CustomWindow.h" />
     <ClInclude Include="DataStruct.h" />
     <ClInclude Include="displaySpectrum.h" />
     <ClInclude Include="FFmpegWrapper.h" />
     <ClInclude Include="BlockWrapper.h" />
+    <ClInclude Include="meloData.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="WndProc.h" />
     <ClInclude Include="spectrumUtils.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="WaveOut.h" />
-    <ClInclude Include="WindowWrapper.h" />
+    <ClInclude Include="WindowWrapper.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClCompile Include="WindowWrapper.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MeloGrapher.rc" />
@@ -126,12 +157,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ydhan\dlg project\library\ffmpeg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\library\ffmpeg-N-111373-g7eeef72c67-win64-gpl-shared\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\ydhan\dlg project\library\ffmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\library\ffmpeg-N-111373-g7eeef72c67-win64-gpl-shared\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>avcodec.lib;avutil.lib;avformat.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

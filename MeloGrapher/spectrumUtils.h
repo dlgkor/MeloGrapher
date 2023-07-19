@@ -3,7 +3,6 @@
 #include"vector2d.h"
 
 namespace melo {
-
 	class SpectrumOption {
 	public:
 		int s_window;
@@ -20,8 +19,7 @@ namespace melo {
 
 		int n_graph;
 
-		double lenght;
-		//plane width if line spectrum. circle round if circular spectrum
+		double lenght; //plane width if line spectrum. circle round if circular spectrum
 
 		//line spectrum
 		vector2d s_point;
@@ -30,5 +28,10 @@ namespace melo {
 		//circular spectrum
 		vector2d r_center;
 		double radius;
+	public:
+		SpectrumOption();
+		int load(const char* filename);
+		int save(const char* filename);
+		~SpectrumOption();
 	};
 }
