@@ -20,9 +20,6 @@ private:
 	int64_t duration;
 	int64_t start_time;
 
-	//int duration_sec;
-
-
 	double dMaxSample;
 
 	bool file_opened;

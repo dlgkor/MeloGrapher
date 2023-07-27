@@ -205,42 +205,12 @@ void EncodedAudio::read_pcm(AudioBlock* target_block, AVFrame* target_frame) {
 			}
 		}
 	}
-	//non planar audio
-	/*
-	else if (sampleFormat == AV_SAMPLE_FMT_FLT) {
-		for (int channel = 0; channel < channels; channel++) {
-			audio_pointer = target_block->getData(channel);
-			for (int sample = 0; sample < samples; sample++) {
-				const float amplitude = *reinterpret_cast<const float*>(data_non_planar[channel] + sample * av_bytes_per_sample);
-				audio_pointer[target_block->getTotalSize() + sample] = (short)(clip((double)amplitude, 1.0) * dMaxSample);
-			}
-		}
-	}
-	else if (sampleFormat == AV_SAMPLE_FMT_DBL) {
-		for (int channel = 0; channel < channels; channel++) {
-			audio_pointer = target_block->getData(channel);
-			for (int sample = 0; sample < samples; sample++) {
-				const double amplitude = *reinterpret_cast<const double*>(data_non_planar[channel] + sample * av_bytes_per_sample);
-				audio_pointer[target_block->getTotalSize() + sample] = (short)(clip(amplitude, 1.0) * dMaxSample);
-			}
-		}
-	}
-	else if (sampleFormat == AV_SAMPLE_FMT_S16) {
-		for (int channel = 0; channel < channels; channel++) {
-			audio_pointer = target_block->getData(channel);
-			for (int sample = 0; sample < samples; sample++) {
-				const short amplitude = *reinterpret_cast<const short*>(data_non_planar[channel] + sample * av_bytes_per_sample);
-				audio_pointer[target_block->getTotalSize() + sample] = amplitude;
-			}
-		}
-	}
-	*/
 
 	else {
 		//unsupported format
-		//|| sampleFormat == AV_SAMPLE_FMT_FLT
-		//|| sampleFormat == AV_SAMPLE_FMT_DBL
-		//|| sampleFormat == AV_SAMPLE_FMT_S16
+		//AV_SAMPLE_FMT_FLT
+		//AV_SAMPLE_FMT_DBL
+		//AV_SAMPLE_FMT_S16
 
 		std::cout << sampleFormat << std::endl;
 		throw "unsupported audio sample format";

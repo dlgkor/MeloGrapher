@@ -26,4 +26,3 @@ extern "C" {
 }
 
 #include<math.h>
-//#define M_PI 3.141592
