@@ -27,6 +27,8 @@ EncodedAudio::EncodedAudio()
 }
 
 void EncodedAudio::open(const char* filename) {
+	//한글경로 문제 발생. 수정필요.
+
 	if (avformat_open_input(&formatContext, filename, NULL, NULL) != 0) {
 		throw "failed to open file";
 	}

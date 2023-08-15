@@ -3,6 +3,8 @@
 #include"CommonHeader.h"
 #include"FFmpegWrapper.h"
 
+#include"spectrumUtils.h"
+
 //thread wait for buffer to be empty
 //fill buffer
 //display if buffer is not empty
@@ -36,6 +38,8 @@ private:
 
 	int spectrum_cursor_gap;
 	int spectrum_window_size;
+	//melo::SpectrumOption* spectrum_option;
+	//이 포인터로 갭이랑 사이즈 대체하기
 
 	int spectrum_end_cursor;
 
@@ -45,6 +49,7 @@ public:
 	BufferManager();
 
 	int get_waveout_block(short** waveout_block_repos, int waveout_block_size);
+	void set_fft_option(melo::SpectrumOption spectrum_option);
 	int get_spectrum_block(SpectrumBlock* spectrum_block_repos);
 	int check_spectrum_block();
 

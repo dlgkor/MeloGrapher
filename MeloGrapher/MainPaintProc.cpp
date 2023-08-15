@@ -24,6 +24,8 @@ void PaintProc(MeloWndData* main_data) {
 
 	Gdiplus::Graphics graphics(main_data->this_window->w_hdc); //Double Buffering
 	graphics.DrawImage(main_data->this_window->gdi_bitmap, 0, 0);
+
+	//Display by UpdateLayeredWindow
 }
 
 //display spectrum

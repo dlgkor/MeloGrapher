@@ -82,6 +82,15 @@ void BlockWrapper::seek(int64_t pos) {
 	fill_thread();
 }
 
+/*
+function that sets spectrum gap and spectrum window at buffer_manger
+gap and window is used at getting FFT block
+This function need to be called whenever spectrum option connected to main window is changed
+*/
+void BlockWrapper::set_buffer_manager(melo::SpectrumOption spectrum_option) {
+	buffer_manager.set_fft_option(spectrum_option);
+}
+
 BlockWrapper::~BlockWrapper() {
 
 }

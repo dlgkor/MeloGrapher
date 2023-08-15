@@ -12,8 +12,9 @@ BufferManager::BufferManager() {
 
 	last_targetblock_cursor = 0;
 	last_targetsample_cursor = 0;
-	spectrum_cursor_gap = 32768 / 16;
-	spectrum_window_size = 32768 / 4;
+
+	spectrum_cursor_gap = -1; //32768 / 16
+	spectrum_window_size = -1; //32768 / 4
 
 	audio_on = false;
 	spectrum_on = false;
@@ -261,6 +262,10 @@ void BufferManager::fill_spectrum_loop() {
 	}
 }
 
+void BufferManager::set_fft_option(melo::SpectrumOption spectrum_option) {
+	spectrum_cursor_gap = spectrum_option.s_gap;
+	spectrum_window_size = spectrum_option.s_window;
+}
 
 int BufferManager::fill_spectrum_block(int target_cursor) {
 	std::cout << "lock audio mutex" << std::endl;

@@ -19,6 +19,8 @@ public:
 	void fill_thread();
 	void play_file();
 	void seek(int64_t pos);
+	void set_buffer_manager(melo::SpectrumOption spectrum_option);
+	//call from windowwrapper set_main_data
 
 	~BlockWrapper();
 	static void CALLBACK AudioCallback(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance, DWORD dwParam1, DWORD dwParam2);
