@@ -385,8 +385,6 @@ void BufferManager::reset_block() {
 
 	last_targetblock_cursor = 0;
 	last_targetsample_cursor = 0;
-	spectrum_cursor_gap = 32768 / 16;
-	spectrum_window_size = 32768 / 4;
 
 	audio_on = false;
 	spectrum_on = false;

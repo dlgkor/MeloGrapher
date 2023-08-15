@@ -57,7 +57,7 @@ int MeloWindow::set_main_data() {
 	main_data.root_hwnd = root_hwnd;
 	main_data.this_window = &main_window;
 
-	main_data.spectrum_option.s_gap = 32768 / 16; //will change to 32768/32
+	main_data.spectrum_option.s_gap = 32768 / 32; //will change to 32768/32
 	main_data.spectrum_option.s_window = 32768 / 4;
 	main_data.spectrum_option.s_window_half = main_data.spectrum_option.s_window / 2;	
 	main_data.spectrum_option.base_frequency = 44100.0 / (double)main_data.spectrum_option.s_window;
@@ -71,6 +71,8 @@ int MeloWindow::set_main_data() {
 	//develop spectrum option load_save method
 
 	main_data.block_wrapper->set_buffer_manager(main_data.spectrum_option);
+
+	main_data.spectrum_option.set_circle_points();
 	//set block_wrapper.buffer_manger spectrum window and gap
 
 	main_data.custom_menu.ResetMenu(main_data.this_window->w_hWnd);

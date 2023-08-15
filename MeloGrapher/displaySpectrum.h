@@ -5,7 +5,7 @@
 #include"DataStruct.h"
 
 namespace melo {
-	const cpx img(0.0, 1.0);
+	//const cpx img(0.0, 1.0);
 
 	void HEllipse(Gdiplus::Graphics* p_graphic, vector2d center, double rad);
 

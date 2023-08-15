@@ -18,8 +18,6 @@ void PaintSpectrum(MeloWndData* main_data, Gdiplus::Graphics* p_graphic);
 
 void PaintMenu(CustomUI::Menu* menu, Gdiplus::Graphics* p_graphic);
 
-//WM_NCHITTEST
-LRESULT NchittestProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam, CustomUI::Menu* menu, vector2d changed_pos);
 
 //WM_MOUSEMOVE
 void MenuMouseMove(CustomUI::Menu* menu, vector2d changed_pos); //Update Menu

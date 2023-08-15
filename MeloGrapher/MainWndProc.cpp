@@ -14,11 +14,6 @@ LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 		SetLayeredWindowAttributes(hWnd, RGB(0, 0, 255), 0, LWA_COLORKEY);
 		SetTimer(hWnd, 1, 10, NULL); //change to 17
 		return 0;
-	/*
-	case WM_NCHITTEST:
-		return NchittestProc(hWnd, iMessage, wParam, lParam, &main_data->custom_menu, vector2d((double)(LOWORD(lParam) - (main_data->this_window->screenWidth / 2)),
-			(double)(HIWORD(lParam) - (main_data->this_window->screenHeight / 2))));
-	*/
 	case WM_MOUSEMOVE:
 		MenuMouseMove(&main_data->custom_menu, vector2d((double)(LOWORD(lParam) - (main_data->this_window->screenWidth / 2)), 
 			(double)(HIWORD(lParam) - (main_data->this_window->screenHeight / 2))));
