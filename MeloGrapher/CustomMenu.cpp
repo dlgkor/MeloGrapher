@@ -1,8 +1,8 @@
 #include"CustomUI.h"
 
 CustomUI::Menu::Menu() {
-	default_plansize = 100.0f;
-	PlaneSize = 100.0f;
+	default_plansize = 70.0f;
+	PlaneSize = 70.0f;
 
 	CurrentState = DEFUALT;
 	NextState = NONE;

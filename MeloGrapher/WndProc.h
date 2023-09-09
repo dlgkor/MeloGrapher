@@ -5,16 +5,18 @@
 //wndproc function of root window
 LRESULT CALLBACK WndProc_Root(HWND, UINT, WPARAM, LPARAM);
 
-
+void PaintProc_Root(MeloRootData* root_data);
 
 
 //wndproc function of main window
 LRESULT CALLBACK WndProc_Main(HWND, UINT, WPARAM, LPARAM);
 
 //WM_PAINT
-void PaintProc(MeloWndData* main_data);
+void PaintProc_Main(MeloMainData* main_data);
 
-void PaintSpectrum(MeloWndData* main_data, Gdiplus::Graphics* p_graphic);
+
+
+void PaintSpectrum(MeloWndData* common_data, Gdiplus::Graphics* p_graphic);
 
 void PaintMenu(CustomUI::Menu* menu, Gdiplus::Graphics* p_graphic);
 
@@ -29,10 +31,10 @@ void MenuMouseClick(CustomUI::Menu* menu, vector2d changed_pos); //Update Menu
 void MenuMouseRelease(CustomUI::Menu* menu, vector2d changed_pos);
 
 //WM_COMMAND
-void CommandProc(MeloWndData* main_data, WPARAM wParam);
+void CommandProc(MeloMainData* main_data, WPARAM wParam);
 
-int CommandOpenFile(MeloWndData* main_data);
+int CommandOpenFile(MeloMainData* main_data);
 
 char* tchar2char(TCHAR* unicode);
 
-void MoveWindow(MeloWndData* main_data);
+void MoveWindow(MeloMainData* main_data);

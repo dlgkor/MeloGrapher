@@ -246,8 +246,6 @@ double EncodedAudio::clip(double dSample, double dMax)
 
 EncodedAudio::~EncodedAudio()
 {
-	if (file_opened)
-		close();
-
+	close();
 	avformat_network_deinit();
 }

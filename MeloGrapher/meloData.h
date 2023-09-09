@@ -5,16 +5,19 @@
 #include"CustomWindow.h"
 #include"CustomUI.h"
 
-struct MeloRootWndData {
+struct MeloWndData {
 	BlockWrapper* block_wrapper;
-	//no calculation
-	//just check child window state and display
+	melo::SpectrumOption spectrum_option;
 };
 
-struct MeloWndData {
-	HWND root_hwnd; //use to post destroy message to root when child is distroyed
-	BlockWrapper* block_wrapper;
+struct MeloRootData {
+	MeloWndData* common_data;
 	CustomWindow* this_window;
-	melo::SpectrumOption spectrum_option;
+};
+
+struct MeloMainData {
+	MeloWndData* common_data;
+	CustomWindow* this_window;
 	CustomUI::Menu custom_menu;
+	HWND root_hwnd;
 };

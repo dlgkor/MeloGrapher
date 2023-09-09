@@ -6,12 +6,9 @@
 * get speciic pointer by handle data
 */
 LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
-	MeloWndData* main_data = reinterpret_cast<MeloWndData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	MeloMainData* main_data = reinterpret_cast<MeloMainData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 	switch (iMessage) {
 	case WM_CREATE:
-		SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
-		//SetLayeredWindowAttributes(hWnd, RGB(0, 0, 255), 255, LWA_ALPHA | LWA_COLORKEY);
-		SetLayeredWindowAttributes(hWnd, RGB(0, 0, 255), 0, LWA_COLORKEY);
 		SetTimer(hWnd, 1, 10, NULL); //change to 17
 		return 0;
 	case WM_MOUSEMOVE:
@@ -31,7 +28,7 @@ LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 		return 0;
 	case WM_PAINT:
 		main_data->this_window->w_hdc = BeginPaint(hWnd, &main_data->this_window->w_ps);
-		PaintProc(main_data);
+		PaintProc_Main(main_data);
 		EndPaint(hWnd, &main_data->this_window->w_ps);
 		return 0;
 	case WM_TIMER:
@@ -43,8 +40,9 @@ LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 		}
 		return 0;
 	case WM_DESTROY:
-		main_data->block_wrapper->close_file();
-		PostMessage(main_data->root_hwnd, WM_DESTROY, NULL, NULL);
+		main_data->common_data->block_wrapper->close_file();
+		//PostMessage(main_data->root_hwnd, WM_DESTROY, NULL, NULL);
+		DestroyWindow(main_data->root_hwnd);
 		return 0;
 	}
 	return(DefWindowProc(hWnd, iMessage, wParam, lParam));

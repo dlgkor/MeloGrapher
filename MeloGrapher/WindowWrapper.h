@@ -13,20 +13,26 @@ private:
 	BlockWrapper block_wrapper; //block calculator	
 
 	HWND root_hwnd; //hidden father window. show by tray icon
-	MeloRootWndData root_data;
+	HWND main_hWnd;
 	NOTIFYICONDATA nid;
 
+	CustomWindow root_window;
 	CustomWindow main_window; //custom child window
-	MeloWndData main_data; //data for setlongptr
+
+	MeloWndData wnd_data; //data for setlongptr
+	MeloRootData root_data;
+	MeloMainData main_data;
 public:
 	MeloWindow(HINSTANCE _hInstance);
 	int wnd_main();
 	~MeloWindow();
 private:
+	int set_common_data();
 	int set_root_data();
 	int set_main_data();
 	int create_root();
 	int destroy_root(); //destroy tray icon
 	int create_main(); //create child window
+	int show_root();
 	int show_main();
 };

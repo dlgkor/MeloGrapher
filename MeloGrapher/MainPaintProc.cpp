@@ -1,6 +1,31 @@
 #include"WndProc.h"
 
-void PaintProc(MeloWndData* main_data) {
+void PaintProc_Root(MeloRootData* root_data) {
+	RECT crt;
+
+	Gdiplus::Graphics* memGraphics;
+
+	crt.left = 0;
+	crt.top = 0;
+	crt.right = root_data->this_window->screenWidth;
+	crt.bottom = root_data->this_window->screenHeight;
+
+	memGraphics = new Gdiplus::Graphics(root_data->this_window->gdi_bitmap);
+	memGraphics->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
+	memGraphics->Clear(Gdiplus::Color(0, 0, 255));
+
+	memGraphics->TranslateTransform(crt.right / 2, crt.bottom / 2);
+
+	PaintSpectrum(root_data->common_data, memGraphics);
+
+	delete memGraphics;
+
+	Gdiplus::Graphics graphics(root_data->this_window->w_hdc); //Double Buffering
+	graphics.DrawImage(root_data->this_window->gdi_bitmap, 0, 0);
+}
+
+void PaintProc_Main(MeloMainData* main_data) {
 	RECT crt;
 
 	Gdiplus::Graphics* memGraphics;
@@ -13,11 +38,10 @@ void PaintProc(MeloWndData* main_data) {
 	memGraphics = new Gdiplus::Graphics(main_data->this_window->gdi_bitmap);
 	memGraphics->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
-	memGraphics->Clear(Gdiplus::Color(0, 0, 255));
+	memGraphics->Clear(Gdiplus::Color(100, 100, 100));
 
 	memGraphics->TranslateTransform(crt.right / 2, crt.bottom / 2);
 
-	PaintSpectrum(main_data, memGraphics);
 	PaintMenu(&main_data->custom_menu, memGraphics);
 
 	delete memGraphics;
@@ -29,19 +53,19 @@ void PaintProc(MeloWndData* main_data) {
 }
 
 //display spectrum
-void PaintSpectrum(MeloWndData* main_data, Gdiplus::Graphics* p_graphic) {
+void PaintSpectrum(MeloWndData* common_data, Gdiplus::Graphics* p_graphic) {
 
-	if (main_data->block_wrapper->encoded_audio != nullptr) {
-		main_data->spectrum_option.base_frequency =
-			(double)main_data->block_wrapper->encoded_audio->get_sample_rate() / (double)main_data->spectrum_option.s_window;
+	if (common_data->block_wrapper->encoded_audio != nullptr) {
+		common_data->spectrum_option.base_frequency =
+			(double)common_data->block_wrapper->encoded_audio->get_sample_rate() / (double)common_data->spectrum_option.s_window;
 
 		SpectrumBlock* spectrum_instance = new SpectrumBlock();
-		main_data->block_wrapper->buffer_manager.check_spectrum_block();
+		common_data->block_wrapper->buffer_manager.check_spectrum_block();
 
-		if (main_data->block_wrapper->buffer_manager.get_spectrum_block(spectrum_instance) != -1) {
+		if (common_data->block_wrapper->buffer_manager.get_spectrum_block(spectrum_instance) != -1) {
 			//get current spectrum data
-			melo::PrintCircularFrequencyWithGDI(p_graphic, spectrum_instance, main_data->spectrum_option);
-			melo::HEllipse(p_graphic, main_data->spectrum_option.r_center, main_data->spectrum_option.radius);
+			melo::PrintCircularFrequencyWithGDI(p_graphic, spectrum_instance, common_data->spectrum_option);
+			melo::HEllipse(p_graphic, common_data->spectrum_option.r_center, common_data->spectrum_option.radius);
 		}
 		delete spectrum_instance;
 	}

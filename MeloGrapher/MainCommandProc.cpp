@@ -1,14 +1,14 @@
 #include"WndProc.h"
 
-void CommandProc(MeloWndData* main_data, WPARAM wParam) {
+void CommandProc(MeloMainData* main_data, WPARAM wParam) {
 	switch (LOWORD(wParam))
 	{
 	case 10:
 		CommandOpenFile(main_data);
 		return;
 	case 11:
-		main_data->block_wrapper->seek(0);
-		main_data->block_wrapper->play_file();
+		main_data->common_data->block_wrapper->seek(0);
+		main_data->common_data->block_wrapper->play_file();
 		return;
     case 12:
         MoveWindow(main_data);
@@ -21,7 +21,7 @@ void CommandProc(MeloWndData* main_data, WPARAM wParam) {
 	}
 }
 
-void MoveWindow(MeloWndData* main_data) {
+void MoveWindow(MeloMainData* main_data) {
 
     POINT cursorPos; // 마우스 좌표를 저장할 POINT 구조체
     GetCursorPos(&cursorPos); // 마우스의 화면 좌표 가져오기
@@ -31,8 +31,7 @@ void MoveWindow(MeloWndData* main_data) {
 }
 
 
-int CommandOpenFile(MeloWndData* main_data) {
-
+int CommandOpenFile(MeloMainData* main_data) {
     SetWindowPos(main_data->this_window->w_hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 
     HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
@@ -63,8 +62,8 @@ int CommandOpenFile(MeloWndData* main_data) {
                     // Display the file name to the user.
                     if (SUCCEEDED(hr))
                     {
-                        main_data->block_wrapper->close_file(); //close if file is opened
-                        main_data->block_wrapper->open_file(tchar2char(pszFilePath));
+                        main_data->common_data->block_wrapper->close_file(); //close if file is opened
+                        main_data->common_data->block_wrapper->open_file(tchar2char(pszFilePath));
                     }
                     pItem->Release();
                 }
