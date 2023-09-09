@@ -49,7 +49,7 @@ int melo::PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBl
 	if (Cut == 0)
 		return 0;
 
-	double amp = 0.1;
+	double amp = 0.05;
 
 	double* f = new double[option.n_graph];
 	for (int i = 0; i < option.n_graph; i++) {

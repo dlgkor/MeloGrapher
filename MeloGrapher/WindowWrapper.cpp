@@ -15,7 +15,7 @@ int MeloWindow::set_common_data() {
 	wnd_data.spectrum_option.max_height = 200;
 	wnd_data.spectrum_option.n_graph = 150;
 	wnd_data.spectrum_option.r_center = { 0, 0 };
-	wnd_data.spectrum_option.radius = 180;
+	wnd_data.spectrum_option.radius = 220;
 	//develop spectrum option load_save method
 	wnd_data.spectrum_option.set_circle_points();
 
@@ -111,7 +111,7 @@ int MeloWindow::create_main() {
 
 	int screen_width = GetSystemMetrics(SM_CXSCREEN);
 	int screen_height = GetSystemMetrics(SM_CYSCREEN);
-	main_window.setScreenSize(200, 200);
+	main_window.setScreenSize(250, 250);
 	main_window.SetScreenLocation((screen_width - main_window.screenWidth) / 2, (screen_height - main_window.screenHeight) / 2);
 	main_hWnd = CreateWindow(lpszClass, L"MeloGrapher", WS_POPUPWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,

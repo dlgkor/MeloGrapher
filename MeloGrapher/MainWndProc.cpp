@@ -40,9 +40,10 @@ LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 		}
 		return 0;
 	case WM_DESTROY:
+		DestroyWindow(main_data->root_hwnd);
 		main_data->common_data->block_wrapper->close_file();
 		//PostMessage(main_data->root_hwnd, WM_DESTROY, NULL, NULL);
-		DestroyWindow(main_data->root_hwnd);
+		PostQuitMessage(0);
 		return 0;
 	}
 	return(DefWindowProc(hWnd, iMessage, wParam, lParam));
