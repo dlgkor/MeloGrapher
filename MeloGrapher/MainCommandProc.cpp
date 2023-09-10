@@ -14,7 +14,8 @@ void CommandProc(MeloMainData* main_data, WPARAM wParam) {
         MoveWindow(main_data);
         return;
 	case 13:
-		DestroyWindow(main_data->this_window->w_hWnd);
+		//DestroyWindow(main_data->this_window->w_hWnd);
+        DestroyWindow(main_data->root_hwnd);
 		return;
 	default:
 		return;
@@ -32,7 +33,7 @@ void MoveWindow(MeloMainData* main_data) {
 
 
 int CommandOpenFile(MeloMainData* main_data) {
-    SetWindowPos(main_data->this_window->w_hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    SetWindowPos(main_data->root_hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 
     HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
         COINIT_DISABLE_OLE1DDE);
@@ -73,7 +74,7 @@ int CommandOpenFile(MeloMainData* main_data) {
         CoUninitialize();
     }
 
-    SetWindowPos(main_data->this_window->w_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    SetWindowPos(main_data->root_hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     return 0;
 }
 

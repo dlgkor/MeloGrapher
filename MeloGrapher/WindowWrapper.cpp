@@ -10,7 +10,7 @@ int MeloWindow::set_common_data() {
 	wnd_data.spectrum_option.s_window_half = wnd_data.spectrum_option.s_window / 2;
 	wnd_data.spectrum_option.base_frequency = 44100.0 / (double)wnd_data.spectrum_option.s_window;
 
-	wnd_data.spectrum_option.max_out_frequency = 2000;
+	wnd_data.spectrum_option.max_out_frequency = 1000;
 	wnd_data.spectrum_option.min_out_frequency = 10;
 	wnd_data.spectrum_option.max_height = 200;
 	wnd_data.spectrum_option.n_graph = 150;
@@ -115,7 +115,7 @@ int MeloWindow::create_main() {
 	main_window.SetScreenLocation((screen_width - main_window.screenWidth) / 2, (screen_height - main_window.screenHeight) / 2);
 	main_hWnd = CreateWindow(lpszClass, L"MeloGrapher", WS_POPUPWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-		NULL, (HMENU)NULL, hInstance, NULL); //root 윈도우와 소유-피소유 관계를 설정해준다
+		root_hwnd, (HMENU)NULL, hInstance, NULL); //root 윈도우와 소유-피소유 관계를 설정해준다
 	main_window.w_hWnd = main_hWnd;
 	main_window.Apply();
 	
@@ -133,7 +133,7 @@ int MeloWindow::set_main_data() {
 	main_data.root_hwnd = root_hwnd;
 	SetWindowLongPtr(main_hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&main_data));
 
-	SetWindowPos(main_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	//SetWindowPos(main_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 	return 0;
 }
 

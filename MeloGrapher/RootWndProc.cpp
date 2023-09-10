@@ -21,6 +21,7 @@ LRESULT CALLBACK WndProc_Root(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 		}
 		return 0;
 	case WM_DESTROY:
+		PostQuitMessage(0);
 		return 0;
 	}
 	return(DefWindowProc(hWnd, iMessage, wParam, lParam));
