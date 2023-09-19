@@ -42,7 +42,7 @@ void CustomWindow::SetScreenLocation(int _locateX, int _locateY) {
 
 void CustomWindow::Apply() {
 	//apply and show change window
-	MoveWindow(w_hWnd, locationX, locationY, screenWidth, screenHeight, TRUE);
+	//MoveWindow(w_hWnd, locationX, locationY, screenWidth, screenHeight, TRUE);
 
 	//renew bitmap
 	if (gdi_bitmap != nullptr)

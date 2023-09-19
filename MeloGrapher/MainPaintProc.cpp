@@ -1,6 +1,6 @@
 #include"WndProc.h"
 
-void PaintProc_Root(MeloRootData* root_data) {
+void PaintProc_Root(MeloGraphData* root_data) {
 	RECT crt;
 
 	Gdiplus::Graphics* memGraphics;
@@ -13,7 +13,7 @@ void PaintProc_Root(MeloRootData* root_data) {
 	memGraphics = new Gdiplus::Graphics(root_data->this_window->gdi_bitmap);
 	memGraphics->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
-	memGraphics->Clear(Gdiplus::Color(0, 0, 255));
+	memGraphics->Clear(Gdiplus::Color(255, 255, 255));
 
 	memGraphics->TranslateTransform(crt.right / 2, crt.bottom / 2);
 
@@ -38,11 +38,11 @@ void PaintProc_Main(MeloMainData* main_data) {
 	memGraphics = new Gdiplus::Graphics(main_data->this_window->gdi_bitmap);
 	memGraphics->SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
-	memGraphics->Clear(Gdiplus::Color(100, 100, 100));
+	memGraphics->Clear(Gdiplus::Color(200, 200, 200));
 
 	memGraphics->TranslateTransform(crt.right / 2, crt.bottom / 2);
 
-	PaintMenu(&main_data->custom_menu, memGraphics);
+	//PaintMenu(&main_data->custom_menu, memGraphics);
 
 	delete memGraphics;
 
@@ -54,7 +54,6 @@ void PaintProc_Main(MeloMainData* main_data) {
 
 //display spectrum
 void PaintSpectrum(MeloWndData* common_data, Gdiplus::Graphics* p_graphic) {
-
 	if (common_data->block_wrapper->encoded_audio != nullptr) {
 		common_data->spectrum_option.base_frequency =
 			(double)common_data->block_wrapper->encoded_audio->get_sample_rate() / (double)common_data->spectrum_option.s_window;
@@ -65,7 +64,7 @@ void PaintSpectrum(MeloWndData* common_data, Gdiplus::Graphics* p_graphic) {
 		if (common_data->block_wrapper->buffer_manager.get_spectrum_block(spectrum_instance) != -1) {
 			//get current spectrum data
 			melo::PrintCircularFrequencyWithGDI(p_graphic, spectrum_instance, common_data->spectrum_option);
-			melo::HEllipse(p_graphic, common_data->spectrum_option.r_center, common_data->spectrum_option.radius);
+			//melo::HEllipse(p_graphic, common_data->spectrum_option.r_center, common_data->spectrum_option.radius);
 		}
 		delete spectrum_instance;
 	}

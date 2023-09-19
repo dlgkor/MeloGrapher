@@ -28,6 +28,16 @@ void melo::SpectrumOption::set_circle_points() {
 	}
 }
 
+void melo::SpectrumOption::set_linear_points() {
+	double gap = lenght / n_graph;
+	for (int i = 0; i < n_graph; i++) {
+		p1[i].x = s_point.x + gap * i; p1[i].y = s_point.y;
+		p2[i].x = s_point.x + gap * (i+1); p2[i].y = s_point.y; 
+		tanline[i] = vector2d(0, 1);
+		//set points and tanline
+	}
+}
+
 melo::SpectrumOption::~SpectrumOption() {
 
 }

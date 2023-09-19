@@ -5,7 +5,7 @@
 //wndproc function of root window
 LRESULT CALLBACK WndProc_Root(HWND, UINT, WPARAM, LPARAM);
 
-void PaintProc_Root(MeloRootData* root_data);
+void PaintProc_Root(MeloGraphData* root_data);
 
 
 //wndproc function of main window
@@ -33,8 +33,8 @@ void MenuMouseRelease(CustomUI::Menu* menu, vector2d changed_pos);
 //WM_COMMAND
 void CommandProc(MeloMainData* main_data, WPARAM wParam);
 
+void MainCommandProc(MeloMainData* main_data, WPARAM wParam);
+
 int CommandOpenFile(MeloMainData* main_data);
 
 char* tchar2char(TCHAR* unicode);
-
-void MoveWindow(MeloMainData* main_data);

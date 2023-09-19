@@ -6,6 +6,7 @@
 #include"CustomUI.h"
 
 struct MeloWndData {
+	HINSTANCE hInstance;
 	BlockWrapper* block_wrapper;
 	melo::SpectrumOption spectrum_option;
 };
@@ -19,5 +20,11 @@ struct MeloMainData {
 	MeloWndData* common_data;
 	CustomWindow* this_window;
 	CustomUI::Menu custom_menu;
+	//HWND root_hwnd;
+};
+
+struct MeloGraphData {
+	MeloWndData* common_data;
+	CustomWindow* this_window;
 	HWND root_hwnd;
 };

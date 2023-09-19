@@ -12,16 +12,19 @@ private:
 
 	BlockWrapper block_wrapper; //block calculator	
 
-	HWND root_hwnd; //hidden father window. show by tray icon
+	//HWND root_hwnd; //hidden father window. show by tray icon
+	HWND graph_hWnd;
 	HWND main_hWnd;
 	NOTIFYICONDATA nid;
 
-	CustomWindow root_window;
+	//CustomWindow root_window;
 	CustomWindow main_window; //custom child window
+	CustomWindow graph_window;
 
 	MeloWndData wnd_data; //data for setlongptr
-	MeloRootData root_data;
+	//MeloRootData root_data;
 	MeloMainData main_data;
+	MeloGraphData graph_data;
 public:
 	MeloWindow(HINSTANCE _hInstance);
 	int wnd_main();

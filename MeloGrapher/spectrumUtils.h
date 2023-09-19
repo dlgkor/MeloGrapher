@@ -42,6 +42,7 @@ namespace melo {
 		int load(const char* filename);
 		int save(const char* filename);
 		void set_circle_points();
+		void set_linear_points();
 		//void set_line_points();
 		~SpectrumOption();
 	};

@@ -9,22 +9,29 @@ LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 	MeloMainData* main_data = reinterpret_cast<MeloMainData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 	switch (iMessage) {
 	case WM_CREATE:
-		SetTimer(hWnd, 1, 10, NULL); //change to 17
+		//SetTimer(hWnd, 1, 10, NULL); //change to 17
 		return 0;
 	case WM_MOUSEMOVE:
+		/*
 		MenuMouseMove(&main_data->custom_menu, vector2d((double)(LOWORD(lParam) - (main_data->this_window->screenWidth / 2)), 
 			(double)(HIWORD(lParam) - (main_data->this_window->screenHeight / 2))));
+		*/
 		return 0;
 	case WM_LBUTTONDOWN:
+		/*
 		MenuMouseClick(&main_data->custom_menu, vector2d((double)(LOWORD(lParam) - (main_data->this_window->screenWidth / 2)),
 			(double)(HIWORD(lParam) - (main_data->this_window->screenHeight / 2))));
+		*/
 		return 0;
 	case WM_LBUTTONUP:
+		/*
 		MenuMouseRelease(&main_data->custom_menu, vector2d((double)(LOWORD(lParam) - (main_data->this_window->screenWidth / 2)),
 			(double)(HIWORD(lParam) - (main_data->this_window->screenHeight / 2))));
+		*/
 		return 0;
 	case WM_COMMAND:
-		CommandProc(main_data, wParam);
+		//CommandProc(main_data, wParam);
+		MainCommandProc(main_data, wParam);
 		return 0;
 	case WM_PAINT:
 		main_data->this_window->w_hdc = BeginPaint(hWnd, &main_data->this_window->w_ps);
@@ -42,6 +49,7 @@ LRESULT CALLBACK WndProc_Main(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lP
 	case WM_DESTROY:
 		//DestroyWindow(main_data->root_hwnd);
 		main_data->common_data->block_wrapper->close_file();
+		PostQuitMessage(0);
 		//PostMessage(main_data->root_hwnd, WM_DESTROY, NULL, NULL);
 		return 0;
 	}
