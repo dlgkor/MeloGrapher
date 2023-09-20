@@ -12,4 +12,6 @@ namespace melo {
 	void Arc_Design(Gdiplus::Graphics* p_graphic, vector2d center, double rad);
 
 	int PrintCircularFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBlock* spectrum_block, SpectrumOption option);
+
+	int PrintDoubleLineFrequencyWithGDI(Gdiplus::Graphics* p_graphic, SpectrumBlock* spectrum_block, SpectrumOption option);
 }

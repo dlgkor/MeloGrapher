@@ -63,7 +63,8 @@ void PaintSpectrum(MeloWndData* common_data, Gdiplus::Graphics* p_graphic) {
 
 		if (common_data->block_wrapper->buffer_manager.get_spectrum_block(spectrum_instance) != -1) {
 			//get current spectrum data
-			melo::PrintCircularFrequencyWithGDI(p_graphic, spectrum_instance, common_data->spectrum_option);
+			//melo::PrintCircularFrequencyWithGDI(p_graphic, spectrum_instance, common_data->spectrum_option);
+			melo::PrintDoubleLineFrequencyWithGDI(p_graphic, spectrum_instance, common_data->spectrum_option);
 			//melo::HEllipse(p_graphic, common_data->spectrum_option.r_center, common_data->spectrum_option.radius);
 		}
 		delete spectrum_instance;
