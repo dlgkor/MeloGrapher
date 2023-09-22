@@ -4,6 +4,7 @@
 #include"displaySpectrum.h"
 #include"CustomWindow.h"
 #include"CustomUI.h"
+#include"YoutubeParser.h"
 
 struct MeloWndData {
 	HINSTANCE hInstance;
@@ -20,6 +21,7 @@ struct MeloMainData {
 	MeloWndData* common_data;
 	CustomWindow* this_window;
 	CustomUI::Menu custom_menu;
+	youtube_parser_ui ytparser_ui;
 	//HWND root_hwnd;
 };
 

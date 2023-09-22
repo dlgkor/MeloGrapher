@@ -37,7 +37,7 @@ int MeloWindow::set_common_data() {
 
 //create root wnd
 int MeloWindow::create_root() {
-	LPCTSTR lpszClass = TEXT("melo_grapher_root");
+	LPCTSTR lpszClass = TEXT("melographer_graph");
 
 	WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
 	wcex.lpfnWndProc = WndProc_Root;
@@ -91,7 +91,7 @@ int MeloWindow::destroy_root() {
 
 //create main window
 int MeloWindow::create_main() {
-	LPCTSTR lpszClass = TEXT("melo_grapher_main");
+	LPCTSTR lpszClass = TEXT("melographer_main");
 
 	WNDCLASS WndClass;
 	WndClass.cbClsExtra = 0;

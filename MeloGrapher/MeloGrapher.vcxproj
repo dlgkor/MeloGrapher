@@ -42,6 +42,7 @@
     <ClCompile Include="SpectrumUtils.cpp" />
     <ClCompile Include="vector2d.cpp" />
     <ClCompile Include="WaveOut.cpp" />
+    <ClCompile Include="YoutubeParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
@@ -64,6 +65,7 @@
     <ClCompile Include="WindowWrapper.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClInclude Include="YoutubeParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MeloGrapher.rc" />

@@ -27,6 +27,7 @@ void MainCommandProc(MeloMainData* main_data, WPARAM wParam) {
         CreateWindow(TEXT("button"), TEXT("Open"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 70, 150, 50, 20, main_data->this_window->w_hWnd, (HMENU)10, main_data->common_data->hInstance, NULL);
         CreateWindow(TEXT("button"), TEXT("Move"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 130, 150, 50, 20, main_data->this_window->w_hWnd, (HMENU)12, main_data->common_data->hInstance, NULL);
         CreateWindow(TEXT("button"), TEXT("Close"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 190, 150, 50, 20, main_data->this_window->w_hWnd, (HMENU)13, main_data->common_data->hInstance, NULL);
+        CreateWindow(TEXT("button"), TEXT("youtube"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 250, 150, 80, 20, main_data->this_window->w_hWnd, (HMENU)14, main_data->common_data->hInstance, NULL);
         return;
     case 10:
         CommandOpenFile(main_data);
@@ -40,6 +41,13 @@ void MainCommandProc(MeloMainData* main_data, WPARAM wParam) {
         return;
     case 13:
         DestroyWindow(main_data->this_window->w_hWnd);
+        return;
+    case 14:
+        main_data->ytparser_ui.Create(main_data->common_data->hInstance, main_data->this_window->w_hWnd);
+        return;
+    case 15:
+        main_data->common_data->block_wrapper->close_file(); //close if file is opened
+        main_data->common_data->block_wrapper->open_file(main_data->ytparser_ui.get_audio_url());
         return;
     default:
         return;
