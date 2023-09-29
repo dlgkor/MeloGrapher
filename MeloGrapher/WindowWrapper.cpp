@@ -9,14 +9,14 @@ int MeloWindow::set_common_data() {
 
 	//wnd_data.spectrum_option.s_gap = 32768 / 8; //will change to 32768/32
 	wnd_data.spectrum_option.s_gap = 3000;
-	wnd_data.spectrum_option.s_window = 32768 / 4;
+	wnd_data.spectrum_option.s_window = 32768 / 8;
 	wnd_data.spectrum_option.s_window_half = wnd_data.spectrum_option.s_window / 2;
 	wnd_data.spectrum_option.base_frequency = 44100.0 / (double)wnd_data.spectrum_option.s_window;
 
-	wnd_data.spectrum_option.max_out_frequency = 1000;
-	wnd_data.spectrum_option.min_out_frequency = 10;
+	wnd_data.spectrum_option.max_out_frequency = 1600;
+	wnd_data.spectrum_option.min_out_frequency = 1;
 	wnd_data.spectrum_option.max_height = 50;
-	wnd_data.spectrum_option.n_graph = 80;
+	wnd_data.spectrum_option.n_graph = 100;
 	wnd_data.spectrum_option.r_center = { 0, 0 };
 	wnd_data.spectrum_option.radius = 220;
 

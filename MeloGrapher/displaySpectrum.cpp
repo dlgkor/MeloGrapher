@@ -150,12 +150,21 @@ int melo::PrintDoubleLineFrequencyWithGDI(Gdiplus::Graphics* p_graphic, Spectrum
 	p_pen = new Gdiplus::Pen(Gdiplus::Color(0, 0, 0, 0), 0.1);
 
 	for (int i = 0; i < option.n_graph; i++) {
+		/*
 		Gdiplus::Point p_point[] = {
 			Gdiplus::Point((INT)(option.r_center.x + option.p1[i].x - (f[i] * option.tanline[i].x)), -(INT)(option.r_center.y + option.p1[i].y - (f[i] * option.tanline[i].y))),
 			Gdiplus::Point((INT)(option.r_center.x + option.p1[i].x + (f[i] * option.tanline[i].x)), -(INT)(option.r_center.y + option.p1[i].y + (f[i] * option.tanline[i].y))),
 			Gdiplus::Point((INT)(option.r_center.x + option.p2[i].x + (f[i] * option.tanline[i].x)), -(INT)(option.r_center.y + option.p2[i].y + (f[i] * option.tanline[i].y))),
 			Gdiplus::Point((INT)(option.r_center.x + option.p2[i].x - (f[i] * option.tanline[i].x)), -(INT)(option.r_center.y + option.p2[i].y - (f[i] * option.tanline[i].y)))
 		};
+		*/
+		Gdiplus::Point p_point[] = {
+			Gdiplus::Point((INT)(option.r_center.x + option.p1[i].x), -(INT)(option.r_center.y + option.p1[i].y - (f[i] * option.tanline[i].y))),
+			Gdiplus::Point((INT)(option.r_center.x + option.p1[i].x), -(INT)(option.r_center.y + option.p1[i].y + (f[i] * option.tanline[i].y))),
+			Gdiplus::Point((INT)(option.r_center.x + option.p1[i].x + 3), -(INT)(option.r_center.y + option.p2[i].y + (f[i] * option.tanline[i].y))),
+			Gdiplus::Point((INT)(option.r_center.x + option.p1[i].x + 3), -(INT)(option.r_center.y + option.p2[i].y - (f[i] * option.tanline[i].y)))
+		};
+		
 		p_graphic->FillPolygon(&solidbrush1, p_point, 4);
 		p_graphic->DrawPolygon(p_pen, p_point, 4);
 	}
